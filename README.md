@@ -29,7 +29,7 @@ Russsiq\GRecaptcha\GRecaptchaServiceProvider::class,
 'GRecaptcha' => Russsiq\GRecaptcha\Support\Facades\GRecaptcha::class,
 ```
 
-**4** Для публикации (копирования) файлов настроек воспользуйтесь командной строкой
+**4** Для публикации (копирования) файла настроек воспользуйтесь командной строкой
 ```
 php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"
 ```
