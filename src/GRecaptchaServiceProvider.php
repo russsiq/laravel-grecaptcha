@@ -5,7 +5,7 @@ namespace Russsiq\GRecaptcha;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
-class GRecaptchaGRecaptchaServiceProvider extends ServiceProvider
+class GRecaptchaServiceProvider extends ServiceProvider
 {
     protected $defer = false;
     
