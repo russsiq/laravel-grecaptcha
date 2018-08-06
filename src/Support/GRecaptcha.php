@@ -27,12 +27,12 @@ class GRecaptcha implements GRecaptchaContract
 		$this->response = $response ?? null; // ?? to >= PHP 7.0
 	}
 
-	public function input(string $tpl = 'components.partials.g_recaptcha_input')
+	public function input(string $tpl = 'g_recaptcha::g_recaptcha_input')
 	{
 		return view($tpl);
 	}
 
-	public function script(string $tpl = 'components.partials.g_recaptcha_script')
+	public function script(string $tpl = 'g_recaptcha::g_recaptcha_script')
 	{
 		if (is_null($this->siteKey)) {
 			return null;

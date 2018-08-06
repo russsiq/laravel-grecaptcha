@@ -1,6 +1,6 @@
 <?php
 
-namespace BBCMS\Support\Contracts;
+namespace Russsiq\GRecaptcha\Support\Contracts;
 
 interface GRecaptchaContract
 {
