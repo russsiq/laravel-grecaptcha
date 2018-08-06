@@ -4,11 +4,7 @@
 	"homepage": "https://github.com/russsiq/laravel-grecaptcha",
     "type": "library",
 	"license": "MIT",
-	"keywords": [
-        "grecaptcha",
-        "laravel",
-        "laravel5"
-    ],
+	"keywords": ["grecaptcha", "laravel", "laravel5"],
     "authors": [
         {
             "name": "Рустам Гимранов",
@@ -17,13 +13,33 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/russsiq/laravel-grecaptcha"
+        }
+    ],
     "require": {
-        "php": ">=7.2.0"
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "illuminate/framework": "5.6.x"
     },
     "autoload": {
         "psr-4": {
-            "Russsiq\\GRecaptcha\\": "src"
+            "Russsiq\\GRecaptcha\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Russsiq\\GRecaptcha\\GRecaptchaServiceProvider"
+            ],
+            "aliases": {
+                "GRecaptcha": "Russsiq\\GRecaptcha\\Support\\Facades\\GRecaptcha"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
