@@ -20,9 +20,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
-    },
-    "require-dev": {
+        "php": ">=7.0",
         "illuminate/framework": "5.6.x"
     },
     "autoload": {
