@@ -1,5 +1,5 @@
-<script type="text/javascript" src="{{ $api_render.$site_key }}"></script>
-<script type="text/javascript">
+<script src="{{ $api_render.$site_key }}"></script>
+<script>
     function grecaptcha_reload() {
         grecaptcha.ready(function() {
             grecaptcha.execute('{{ $site_key }}', {
