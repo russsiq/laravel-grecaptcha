@@ -47,7 +47,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'grecaptcha',
+            'g_recaptcha',
         ];
     }
 }
