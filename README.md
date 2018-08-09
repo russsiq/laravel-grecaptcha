@@ -5,7 +5,7 @@
 ### Подключение
 
 **1** Для добавления зависимости в проект на Laravel в файле `composer.json`
-```php
+```json
 "require": {
     ...
     "russsiq/laravel-grecaptcha": "dev-master"
@@ -13,14 +13,14 @@
 ```
 
 **2** Для подключения в уже созданный проект воспользуйтесь командной строкой:
-```
+```console
 composer require russsiq/laravel-grecaptcha:dev-master
 ```
 
 **3** В файле `config/app.php` добавьте:
 
 **3.1** Провайдер услуг в раздел `'providers'`:
-```
+```php
 Russsiq\GRecaptcha\GRecaptchaServiceProvider::class,
 ```
 
