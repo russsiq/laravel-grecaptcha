@@ -5,7 +5,7 @@
 ### Подключение
 
 **1** Для добавления зависимости в проект на Laravel в файле `composer.json`
-```
+```php
 "require": {
     ...
     "russsiq/laravel-grecaptcha": "dev-master"
