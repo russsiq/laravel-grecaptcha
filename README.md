@@ -60,4 +60,4 @@ composer remove russsiq/laravel-grecaptcha
 
 ### Лицензия
 
-laravel-grecaptcha - программное обеспечение с открытым исходным кодом, распространяющееся по лицензии [MIT license](https://choosealicense.com/licenses/mit/).
+laravel-grecaptcha - программное обеспечение с открытым исходным кодом, распространяющееся по лицензии [MIT](https://choosealicense.com/licenses/mit/).
