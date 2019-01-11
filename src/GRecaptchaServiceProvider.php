@@ -9,8 +9,18 @@ use Illuminate\Support\ServiceProvider;
 
 class GRecaptchaServiceProvider extends ServiceProvider
 {
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
     protected $defer = false;
 
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
     public function boot()
     {
         $this->publishes([
@@ -35,6 +45,11 @@ class GRecaptchaServiceProvider extends ServiceProvider
         );
     }
 
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
     public function register()
     {
         $this->app->singleton('g_recaptcha', function () {
