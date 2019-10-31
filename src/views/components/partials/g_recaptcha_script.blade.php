@@ -3,13 +3,14 @@
     function grecaptcha_reload() {
         grecaptcha.ready(function() {
             grecaptcha.execute('{{ $site_key }}', {
-                action: 'feedback_form'
-            })
-            .then(function(token) {
-                document.getElementsByName('g-recaptcha-response').forEach(function(node) {
-                    node.value = token;
+                    action: 'laravel-grecaptcha'
+                })
+                .then(function(token) {
+                    document.getElementsByName('g-recaptcha-response')
+                        .forEach(function(node) {
+                            node.value = token;
+                        });
                 });
-            });
         });
     }
     grecaptcha_reload();
