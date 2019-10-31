@@ -1,6 +1,6 @@
 {
     "name": "russsiq/laravel-grecaptcha",
-    "description": "Laravel 5.6 validator extension with Google reCAPTCHA v3.",
+    "description": "Laravel 6.* validator extension with Google reCAPTCHA v3.",
 	"homepage": "https://github.com/russsiq/laravel-grecaptcha",
     "type": "library",
 	"license": "MIT",
