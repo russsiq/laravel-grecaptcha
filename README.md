@@ -1,4 +1,4 @@
-## Laravel 5.6 validator extension with Google reCAPTCHA v3.
+## Laravel 6.* validator extension with Google reCAPTCHA v3.
 
 Расширение валидатора фреймворка Laravel `6.*` для использования Google reCAPTCHA v3. Выполняет запрос к сервису Google об оценке действий пользователя без его участия для блокирования отправки форм ботами, которые чаще всего спамят.
 
