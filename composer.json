@@ -4,7 +4,7 @@
 	"homepage": "https://github.com/russsiq/laravel-grecaptcha",
     "type": "library",
 	"license": "MIT",
-	"keywords": ["grecaptcha", "laravel", "laravel5"],
+	"keywords": ["grecaptcha", "laravel", "laravel6"],
     "authors": [
         {
             "name": "Рустам Гимранов",
