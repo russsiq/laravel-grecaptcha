@@ -41,7 +41,8 @@ class GRecaptcha implements GRecaptchaContract
 		return view($tpl, [
 				'api_render' => $this->apiRender,
 				'site_key' => $this->siteKey
-			])->render();
+			])
+			->render();
 	}
 
 	public function verifying()
@@ -97,18 +98,22 @@ class GRecaptcha implements GRecaptchaContract
 	protected function getCurlAnswer(string $query)
 	{
 		$ch = curl_init();
+
 		if (curl_errno($ch) != 0) {
 			throw new Exception(
 				'err_curl_'.curl_errno($ch).' '.curl_error($ch)
 			);
 		}
+
 		curl_setopt($ch, CURLOPT_URL, $this->apiVerify);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
 		$answer = curl_exec($ch);
 		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
 		if (404 == $status) {
 			throw new Exception(
 				'Source file not found.'
@@ -118,6 +123,7 @@ class GRecaptcha implements GRecaptchaContract
 				'err_curl_'.$status
 			);
 		}
+
 		curl_close($ch);
 
 		return $answer;

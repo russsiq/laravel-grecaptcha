@@ -24,11 +24,11 @@ class GRecaptchaServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/config/g_recaptcha.php' => config_path('g_recaptcha.php'),
+            __DIR__ . '/../config/g_recaptcha.php' => config_path('g_recaptcha.php'),
         ], 'config');
 
-        $this->loadTranslationsFrom(__DIR__ . '/lang', 'g_recaptcha');
-        $this->loadViewsFrom(__DIR__ . '/views/components/partials', 'g_recaptcha');
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'g_recaptcha');
+        $this->loadViewsFrom(__DIR__ . '/../views/components/partials', 'g_recaptcha');
 
         Blade::directive('g_recaptcha_input', function ($expression) {
             return "<?php echo app('g_recaptcha')->input($expression); ?>";
