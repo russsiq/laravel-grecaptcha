@@ -2,6 +2,8 @@
 
 Расширение валидатора фреймворка Laravel `6.*` для использования Google reCAPTCHA v3. Выполняет запрос к сервису Google об оценке действий пользователя без его участия для блокирования отправки форм ботами, которые чаще всего спамят.
 
+Перед использованием пакета зарегистрируйтесь и получите **Ключ** и **Секретный ключ** reCAPTCHA v3 здесь [https://g.co/recaptcha/v3](https://g.co/recaptcha/v3).
+
 ### Подключение
 
 **1** Для добавления зависимости в проект на Laravel в файле `composer.json`
@@ -33,7 +35,7 @@ Russsiq\GRecaptcha\GRecaptchaServiceProvider::class,
 php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"
 ```
 
-**5** Перед использованием пакета зарегистрируйтесь и получите **Ключ** и **Секретный ключ** reCAPTCHA v3 здесь [https://g.co/recaptcha/v3](https://g.co/recaptcha/v3). Вставьте Ключ и Секретный ключ в соответствующие поля в файле `config/g_recaptcha.php` вашего проекта.
+**5** Вставьте **Ключ** и **Секретный ключ** в соответствующие поля в файле `config/g_recaptcha.php` вашего проекта.
 
 ### Использование в шаблонах
 Добавьте javascript в главный шаблон перед закрывающим тегов *&lt;/body&gt;*, используя директиву `@g_recaptcha_script`.
