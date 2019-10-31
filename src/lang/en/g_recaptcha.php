@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'fails' => 'You are not allowed to do this.',
+    'messages' => [
+        'fails' => 'Unfortunately, you are not allowed to perform this action.',
+    ],
 ];
