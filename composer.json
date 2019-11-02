@@ -1,27 +1,25 @@
 {
     "name": "russsiq/laravel-grecaptcha",
     "description": "Laravel 6.* validator extension with Google reCAPTCHA v3.",
-	"homepage": "https://github.com/russsiq/laravel-grecaptcha",
+    "homepage": "https://github.com/russsiq/laravel-grecaptcha",
     "type": "library",
-	"license": "MIT",
-	"keywords": ["grecaptcha", "laravel", "laravel6"],
-    "authors": [
-        {
-            "name": "Рустам Гимранов",
-            "email": "rustam_gimranov@mail.ru",
-            "homepage": "https://github.com/russsiq",
-            "role": "Developer"
-        }
-    ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/russsiq/laravel-grecaptcha"
-        }
-    ],
+    "license": "MIT",
+    "keywords": ["laravel", "google recaptcha"],
+    "authors": [{
+        "name": "Рустам Гимранов",
+        "email": "rustam_gimranov@mail.ru",
+        "homepage": "https://github.com/russsiq",
+        "role": "Developer"
+    }],
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/russsiq/laravel-grecaptcha"
+    }],
     "require": {
+        "illuminate/support": "6.*",
         "php": ">=7.2.0"
     },
+    "require-dev": {},
     "autoload": {
         "psr-4": {
             "Russsiq\\GRecaptcha\\": "src/app/"
