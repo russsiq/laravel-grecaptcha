@@ -27,6 +27,14 @@ class GRecaptchaServiceProvider extends ServiceProvider
             __DIR__ . '/../config/g_recaptcha.php' => config_path('g_recaptcha.php'),
         ], 'config');
 
+        $this->publishes([
+            __DIR__ . '/../lang' => resource_path('lang/vendor/g_recaptcha'),
+        ], 'lang');
+
+        $this->publishes([
+            __DIR__.'/../views' => resource_path('views/vendor/g_recaptcha'),
+        ], 'views');
+
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'g_recaptcha');
         $this->loadViewsFrom(__DIR__ . '/../views/components/partials', 'g_recaptcha');
 
