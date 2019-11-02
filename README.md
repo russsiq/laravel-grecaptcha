@@ -20,12 +20,12 @@ composer require russsiq/laravel-grecaptcha:dev-master
 
 **3** В файле `config/app.php` добавьте:
 
-**3.1** Провайдер услуг в раздел `'providers'`:
+**3.1** Провайдер услуг в раздел `providers`:
 ```php
 Russsiq\GRecaptcha\GRecaptchaServiceProvider::class,
 ```
 
-**3.2** Псевдоним класса (Facade) в раздел `'aliases'`:
+**3.2** Псевдоним класса (Facade) в раздел `aliases`:
 ```php
 'GRecaptcha' => Russsiq\GRecaptcha\Support\Facades\GRecaptcha::class,
 ```
