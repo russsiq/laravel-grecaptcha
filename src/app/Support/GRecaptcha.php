@@ -20,8 +20,8 @@ class GRecaptcha implements GRecaptchaContract
 		$this->apiRender = $config['api_render'] ?? 'https://www.google.com/recaptcha/api.js?render=';
 		$this->apiVerify = $config['api_verify'] ?? 'https://www.google.com/recaptcha/api/siteverify';
 
-		$this->siteKey = $config['site_key'] ?? null;
-		$this->secretKey = $config['secret_key'] ?? null;
+		$this->siteKey = $config['site_key'] ?: null;
+		$this->secretKey = $config['secret_key'] ?: null;
 		$this->score = (double) $config['score'] ?? 0.5;
 
 		$this->response = $response ?? null;
