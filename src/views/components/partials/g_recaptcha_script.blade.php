@@ -3,7 +3,7 @@
     function grecaptcha_reload() {
         grecaptcha.ready(function() {
             grecaptcha.execute('{{ $site_key }}', {
-                    action: 'laravel-grecaptcha'
+                    action: 'laravel_grecaptcha'
                 })
                 .then(function(token) {
                     document.getElementsByName('g-recaptcha-response')
