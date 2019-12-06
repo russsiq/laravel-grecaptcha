@@ -2,19 +2,29 @@
 
 namespace Russsiq\GRecaptcha;
 
-use Russsiq\GRecaptcha\Support\GRecaptcha;
-
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+
+use Russsiq\GRecaptcha\Support\GRecaptcha;
 
 class GRecaptchaServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * Путь до директории с исходниками.
      *
-     * @var bool
+     * @var string
      */
-    protected $defer = false;
+    const SOURCE_DIR = __DIR__.'/../';
+
+    /**
+     * Все синглтоны (одиночки) контейнера,
+     * которые должны быть зарегистрированы.
+     *
+     * @var array
+     */
+    public $singletons = [
+        'g_recaptcha' => GRecaptcha::class,
+    ];
 
     /**
      * Bootstrap the application events.
@@ -23,21 +33,36 @@ class GRecaptchaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/../config/g_recaptcha.php' => config_path('g_recaptcha.php'),
-        ], 'config');
+        // Определить директивы шаблонизатора Blade.
+        $this->defineGRecaptchaBladeDirective();
 
-        $this->publishes([
-            __DIR__ . '/../lang' => resource_path('lang/vendor/g_recaptcha'),
-        ], 'lang');
+        // Определить Расширение для валидатора.
+        $this->defineGRecaptchaValidator();
 
-        $this->publishes([
-            __DIR__.'/../views' => resource_path('views/vendor/g_recaptcha'),
-        ], 'views');
+        // Загрузка файлов Расширения.
+        $this->loadGRecaptchaFiles();
 
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'g_recaptcha');
-        $this->loadViewsFrom(__DIR__ . '/../views/components/partials', 'g_recaptcha');
+        // Действия, выполнение которых может быть только из консоли.
+        if ($this->app->runningInConsole()) {
+            // Публикация ресурсов.
+            $this->publishGRecaptchaFiles();
+        }
+    }
 
+    public function provides()
+    {
+        return [
+            'g_recaptcha',
+        ];
+    }
+
+    /**
+     * Определить директивы шаблонизатора Blade.
+     *
+     * @return void
+     */
+    protected function defineGRecaptchaBladeDirective()
+    {
         Blade::directive('g_recaptcha_input', function ($expression) {
             return "<?php echo app('g_recaptcha')->input($expression); ?>";
         });
@@ -45,7 +70,15 @@ class GRecaptchaServiceProvider extends ServiceProvider
         Blade::directive('g_recaptcha_script', function ($expression) {
             return "<?php echo app('g_recaptcha')->script($expression); ?>";
         });
+    }
 
+    /**
+     * Определить Расширение для валидатора.
+     *
+     * @return void
+     */
+    protected function defineGRecaptchaValidator()
+    {
         $this->app->validator->extendImplicit('g_recaptcha',
             function ($attribute, $value, $parameters, $validator) {
                 return app('g_recaptcha')->verifying();
@@ -54,23 +87,37 @@ class GRecaptchaServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the service provider.
+     * Загрузка файлов Расширения.
      *
      * @return void
      */
-    public function register()
+    protected function loadGRecaptchaFiles()
     {
-        $this->app->singleton('g_recaptcha', function () {
-            return new GRecaptcha(config('g_recaptcha'),
-                $this->app->request->input('g-recaptcha-response', null)
-            );
-        });
+        $this->loadTranslationsFrom(self::SOURCE_DIR.'resources/lang', 'g_recaptcha');
+        $this->loadViewsFrom(self::SOURCE_DIR.'resources/views/components/partials', 'g_recaptcha');
     }
 
-    public function provides()
+    /**
+     * Публикация файлов Расширения.
+     * `php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"`
+     *
+     * @return void
+     */
+    protected function publishGRecaptchaFiles()
     {
-        return [
-            'g_recaptcha',
-        ];
+        // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=config --force
+        $this->publishes([
+            self::SOURCE_DIR.'config/g_recaptcha.php' => config_path('g_recaptcha.php'),
+        ], 'config');
+
+        // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=lang --force
+        $this->publishes([
+            self::SOURCE_DIR.'resources/lang' => resource_path('lang/vendor/g_recaptcha'),
+        ], 'lang');
+
+        // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=views --force
+        $this->publishes([
+            self::SOURCE_DIR.'resources/views' => resource_path('views/vendor/g_recaptcha'),
+        ], 'views');
     }
 }

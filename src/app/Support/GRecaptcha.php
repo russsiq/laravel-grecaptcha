@@ -2,30 +2,51 @@
 
 namespace Russsiq\GRecaptcha\Support;
 
+use Illuminate\Foundation\Application;
+
 use Russsiq\GRecaptcha\Support\Contracts\GRecaptchaContract;
 
 class GRecaptcha implements GRecaptchaContract
 {
+	const DEFAULT_API_RENDER = 'https://www.google.com/recaptcha/api.js?render=';
+	const DEFAULT_API_VERIFY = 'https://www.google.com/recaptcha/api/siteverify';
+	const DEFAULT_SCORE = 0.5;
+
+    /**
+     * Экземпляр приложения.
+     *
+     * @var Application
+     */
+    protected $app;
+
 	protected $apiRender;
 	protected $apiVerify;
 
-	protected $siteKey;
-	protected $secretKey;
-	protected $score;
-
 	protected $response;
 
-	public function __construct($config, $response)
-	{
-		$this->apiRender = $config['api_render'] ?? 'https://www.google.com/recaptcha/api.js?render=';
-		$this->apiVerify = $config['api_verify'] ?? 'https://www.google.com/recaptcha/api/siteverify';
+	protected $score;
+	protected $secretKey;
+	protected $siteKey;
 
-		$this->siteKey = $config['site_key'] ?: null;
-		$this->secretKey = $config['secret_key'] ?: null;
-		$this->score = (double) $config['score'] ?? 0.5;
 
-		$this->response = $response ?? null;
-	}
+    /**
+     * Создать новый экземпляр Расширения.
+     *
+     * @param  Application  $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+
+		$this->apiRender = $this->app->config->get('g_recaptcha.api_render', self::DEFAULT_API_RENDER);
+		$this->apiVerify = $this->app->config->get('g_recaptcha.api_verify', self::DEFAULT_API_VERIFY);
+
+		$this->response = $this->app->request->input('g-recaptcha-response', null);
+
+		$this->score = (double) $this->app->config->get('g_recaptcha.score', self::DEFAULT_SCORE);
+		$this->secretKey = $this->app->config->get('g_recaptcha.secret_key', null);
+		$this->siteKey = $this->app->config->get('g_recaptcha.site_key', null);
+    }
 
 	public function input(string $tpl = 'g_recaptcha::g_recaptcha_input')
 	{
