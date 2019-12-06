@@ -42,10 +42,18 @@
 php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"
 ```
 
-Помимо этого, доступна групповая публикация файлов по отдельным меткам `config`:
+Помимо этого, доступна групповая публикация файлов по отдельным меткам `config`, `lang`, `views`:
 
 ```console
 php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=config --force
+```
+
+```console
+php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=lang --force
+```
+
+```console
+php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=views --force
 ```
 
 ###Настройка
