@@ -4,7 +4,7 @@ namespace Russsiq\GRecaptcha\Support;
 
 use Illuminate\Foundation\Application;
 
-use Russsiq\GRecaptcha\Support\Contracts\GRecaptchaContract;
+use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
 class GRecaptcha implements GRecaptchaContract
 {

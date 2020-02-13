@@ -1,6 +1,6 @@
 <?php
 
-namespace Russsiq\GRecaptcha\Support\Facades;
+namespace Russsiq\GRecaptcha\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

@@ -31,7 +31,7 @@
                 "Russsiq\\GRecaptcha\\GRecaptchaServiceProvider"
             ],
             "aliases": {
-                "GRecaptcha": "Russsiq\\GRecaptcha\\Support\\Facades\\GRecaptcha"
+                "GRecaptcha": "Russsiq\\GRecaptcha\\Facades\\GRecaptcha"
             }
         }
     },
