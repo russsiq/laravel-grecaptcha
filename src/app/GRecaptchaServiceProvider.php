@@ -33,14 +33,14 @@ class GRecaptchaServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Загрузка файлов Расширения.
+        $this->loadGRecaptchaFiles();
+
         // Определить директивы шаблонизатора Blade.
         $this->defineGRecaptchaBladeDirective();
 
         // Определить Расширение для валидатора.
         $this->defineGRecaptchaValidator();
-
-        // Загрузка файлов Расширения.
-        $this->loadGRecaptchaFiles();
 
         // Действия, выполнение которых может быть только из консоли.
         if ($this->app->runningInConsole()) {
