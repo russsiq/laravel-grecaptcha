@@ -2,6 +2,7 @@
 
 namespace Russsiq\GRecaptcha\Support;
 
+use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Application;
 
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
@@ -65,6 +66,31 @@ class GRecaptcha implements GRecaptchaContract
 			])
 			->render();
 	}
+
+    /**
+     * [validate description]
+     * @param  string  $attribute
+     * @param  string|null  $value
+     * @param  array  $parameters
+     * @param  ValidatorContract  $validator
+     * @return bool
+     */
+    public function validate(
+        string $attribute,
+        string $value = null,
+        array $parameters = [],
+        ValidatorContract $validator
+    ) {
+        if ($this->verifying()) {
+            return true;
+        }
+
+        $validator->fallbackMessages['g_recaptcha'] = trans(
+			'g_recaptcha::g_recaptcha.messages.fails'
+		);
+
+        return false;
+    }
 
 	public function verifying()
 	{

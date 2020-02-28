@@ -79,11 +79,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      */
     protected function defineGRecaptchaValidator()
     {
-        $this->app->validator->extendImplicit('g_recaptcha',
-            function ($attribute, $value, $parameters, $validator) {
-                return app('g_recaptcha')->verifying();
-            }, trans('g_recaptcha::g_recaptcha.messages.fails')
-        );
+        $this->app->validator->extendImplicit('g_recaptcha', GRecaptcha::class);
     }
 
     /**
