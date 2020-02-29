@@ -2,16 +2,21 @@
 
 namespace Russsiq\GRecaptcha;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\ServiceProvider;
+// Зарегистрированные фасады приложения.
+use Blade;
+use Validator;
 
+// Сторонние зависимости.
+use Illuminate\Support\ServiceProvider;
 use Russsiq\GRecaptcha\Support\GRecaptcha;
 
+/**
+ * Поставщик службы ReCaptcha.
+ */
 class GRecaptchaServiceProvider extends ServiceProvider
 {
     /**
      * Путь до директории с исходниками.
-     *
      * @var string
      */
     const SOURCE_DIR = __DIR__.'/../';
@@ -19,16 +24,15 @@ class GRecaptchaServiceProvider extends ServiceProvider
     /**
      * Все синглтоны (одиночки) контейнера,
      * которые должны быть зарегистрированы.
-     *
      * @var array
      */
     public $singletons = [
         'g_recaptcha' => GRecaptcha::class,
+
     ];
 
     /**
-     * Bootstrap the application events.
-     *
+     * Загрузка служб приложения.
      * @return void
      */
     public function boot()
@@ -49,16 +53,8 @@ class GRecaptchaServiceProvider extends ServiceProvider
         }
     }
 
-    public function provides()
-    {
-        return [
-            'g_recaptcha',
-        ];
-    }
-
     /**
      * Определить директивы шаблонизатора Blade.
-     *
      * @return void
      */
     protected function defineGRecaptchaBladeDirective()
@@ -74,17 +70,15 @@ class GRecaptchaServiceProvider extends ServiceProvider
 
     /**
      * Определить Расширение для валидатора.
-     *
      * @return void
      */
     protected function defineGRecaptchaValidator()
     {
-        $this->app->validator->extendImplicit('g_recaptcha', GRecaptcha::class);
+        Validator::extendImplicit('g_recaptcha', GRecaptcha::class);
     }
 
     /**
      * Загрузка файлов Расширения.
-     *
      * @return void
      */
     protected function loadGRecaptchaFiles()
@@ -96,7 +90,6 @@ class GRecaptchaServiceProvider extends ServiceProvider
     /**
      * Публикация файлов Расширения.
      * `php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"`
-     *
      * @return void
      */
     protected function publishGRecaptchaFiles()
