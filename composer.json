@@ -1,10 +1,11 @@
 {
     "name": "russsiq/laravel-grecaptcha",
     "description": "Расширение валидатора Laravel 6.x для проверки Google reCAPTCHA v3.",
+    "keywords": ["laravel", "google recaptcha"],
     "homepage": "https://github.com/russsiq/laravel-grecaptcha",
     "type": "library",
+
     "license": "MIT",
-    "keywords": ["laravel", "google recaptcha"],
     "authors": [{
         "name": "Рустам Гимранов",
         "email": "rustam_gimranov@mail.ru",
@@ -16,8 +17,9 @@
         "url": "https://github.com/russsiq/laravel-grecaptcha"
     }],
     "require": {
-        "illuminate/support": "6.*",
-        "php": ">=7.2.0"
+        "php": ">=7.2.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "illuminate/support": "6.*"
     },
     "require-dev": {},
     "autoload": {
