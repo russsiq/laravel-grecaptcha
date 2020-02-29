@@ -2,6 +2,8 @@
 
 namespace Russsiq\GRecaptcha\Support;
 
+use Exception;
+
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Application;
 
@@ -23,8 +25,6 @@ class GRecaptcha implements GRecaptchaContract
 	protected $apiRender;
 	protected $apiVerify;
 
-	protected $response;
-
 	protected $score;
 	protected $secretKey;
 	protected $siteKey;
@@ -41,8 +41,6 @@ class GRecaptcha implements GRecaptchaContract
 
 		$this->apiRender = $this->app->config->get('g_recaptcha.api_render', self::DEFAULT_API_RENDER);
 		$this->apiVerify = $this->app->config->get('g_recaptcha.api_verify', self::DEFAULT_API_VERIFY);
-
-		$this->response = $this->app->request->input('g-recaptcha-response', null);
 
 		$this->score = (double) $this->app->config->get('g_recaptcha.score', self::DEFAULT_SCORE);
 		$this->secretKey = $this->app->config->get('g_recaptcha.secret_key', null);
@@ -81,7 +79,7 @@ class GRecaptcha implements GRecaptchaContract
         array $parameters = [],
         ValidatorContract $validator
     ) {
-        if ($this->verifying()) {
+        if ($this->verifying($this->secretKey, $value)) {
             return true;
         }
 
@@ -92,30 +90,39 @@ class GRecaptcha implements GRecaptchaContract
         return false;
     }
 
-	public function verifying()
+	public function verifying(string $secretKey = null, string $response = null)
 	{
-		if (is_null($this->secretKey) or is_null($this->response)) {
-			return false;
-		}
-
 		try {
-			$verified = $this->touchAnswer();
+
+			if (is_null($secretKey)) {
+				throw new Exception(
+					'Secret Key not defined.'
+				);
+			}
+
+			if (is_null($response)) {
+				throw new Exception(
+					'User response token not provided.'
+				);
+			}
+
+			$verified = $this->touchAnswer(
+				$this->prepareQuery($secretKey, $response)
+			);
 		} catch (Exception $e) {
+			logger(self::class, [$e->getMessage()]);
+
             return false;
         }
 
-		if (is_array($verified) and $verified['success'] and $verified['score'] >= $this->score) {
-			return true;
-		}
-
-		return false;
+		return is_array($verified)
+			&& $verified['success']
+			&& $verified['score'] >= $this->score;
 	}
 
-    protected function touchAnswer()
+    protected function touchAnswer(string $query)
     {
-		$query = $this->prepareQuery();
-
-        if (extension_loaded('curl') and function_exists('curl_init')) {
+		if (extension_loaded('curl') and function_exists('curl_init')) {
 			$answer = $this->getCurlAnswer($query);
         } elseif (ini_get('allow_url_fopen')) {
             $answer = $this->getFopenAnswer($query);
@@ -134,12 +141,13 @@ class GRecaptcha implements GRecaptchaContract
         return (array) $answer;
     }
 
-	protected function prepareQuery()
+	protected function prepareQuery(string $secret, string $response)
 	{
 		return http_build_query([
-	            'secret' => $this->secretKey,
-	            'response' => $this->response
-	        ]);
+            'secret' => $secret,
+            'response' => $response,
+
+        ]);
 	}
 
 	protected function getCurlAnswer(string $query)
