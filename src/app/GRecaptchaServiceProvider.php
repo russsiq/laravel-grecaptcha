@@ -54,6 +54,17 @@ class GRecaptchaServiceProvider extends ServiceProvider
     }
 
     /**
+     * Получить полный путь к файлу или директории,
+     * которые расположены в директории исходников.
+     * @param  string  $path
+     * @return string
+     */
+    protected function sourcePath(string $path): string
+    {
+        return self::SOURCE_DIR.$path;
+    }
+
+    /**
      * Определить директивы шаблонизатора Blade.
      * @return void
      */
@@ -83,8 +94,8 @@ class GRecaptchaServiceProvider extends ServiceProvider
      */
     protected function loadGRecaptchaFiles()
     {
-        $this->loadTranslationsFrom(self::SOURCE_DIR.'resources/lang', 'g_recaptcha');
-        $this->loadViewsFrom(self::SOURCE_DIR.'resources/views/components/partials', 'g_recaptcha');
+        $this->loadTranslationsFrom($this->sourcePath('resources/lang'), 'g_recaptcha');
+        $this->loadViewsFrom($this->sourcePath('resources/views/components/partials'), 'g_recaptcha');
     }
 
     /**
@@ -96,17 +107,17 @@ class GRecaptchaServiceProvider extends ServiceProvider
     {
         // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=config --force
         $this->publishes([
-            self::SOURCE_DIR.'config/g_recaptcha.php' => config_path('g_recaptcha.php'),
+            $this->sourcePath('config/g_recaptcha.php') => config_path('g_recaptcha.php'),
         ], 'config');
 
         // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=lang --force
         $this->publishes([
-            self::SOURCE_DIR.'resources/lang' => resource_path('lang/vendor/g_recaptcha'),
+            $this->sourcePath('resources/lang') => resource_path('lang/vendor/g_recaptcha'),
         ], 'lang');
 
         // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=views --force
         $this->publishes([
-            self::SOURCE_DIR.'resources/views' => resource_path('views/vendor/g_recaptcha'),
+            $this->sourcePath('resources/views') => resource_path('views/vendor/g_recaptcha'),
         ], 'views');
     }
 }
