@@ -8,7 +8,6 @@ use Exception;
 // Сторонние зависимости.
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Foundation\Application;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
 /**
