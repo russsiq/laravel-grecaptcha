@@ -17,6 +17,12 @@ use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 class GoogleV3Driver implements GRecaptchaContract
 {
     /**
+     * Код успешного ответа.
+     * @var int
+     */
+    const HTTP_OK = 200;
+
+    /**
      * Экземпляр контейнера приложения.
      * @var Container
      */
@@ -355,6 +361,42 @@ class GoogleV3Driver implements GRecaptchaContract
             throw new InvalidArgumentException(
                 'User response token not provided.'
             );
+        }
+    }
+
+    /**
+     * Определить, что ответ имеет статус успешного.
+     * @param  ResponseInterface  $response
+     * @return void
+     *
+     * @throws Exception
+     */
+    protected function assertResponseIsSuccessful(ResponseInterface $response)
+    {
+        $code = $response->getStatusCode();
+
+        if ($code !== self::HTTP_OK) {
+            throw new Exception(sprintf(
+                'Response status code: %s',
+                $code
+            ));
+        }
+    }
+
+    /**
+     * Подтвердить отсутствие ошибкок во время декодирования JSON.
+     * @param  int  $jsonError
+     * @return void
+     *
+     * @throws Exception
+     */
+    protected function assertJsonIsValid(int $jsonError)
+    {
+        if ($jsonError !== JSON_ERROR_NONE) {
+            throw new Exception(sprintf(
+                'JSON ERROR: %s',
+                json_last_error_msg()
+            ));
         }
     }
 }
