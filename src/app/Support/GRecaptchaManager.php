@@ -8,9 +8,7 @@ use Exception;
 // Сторонние зависимости.
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Manager;
-use Illuminate\Support\Str;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 use Russsiq\GRecaptcha\Support\Drivers\GoogleV3Driver;
 
