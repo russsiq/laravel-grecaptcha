@@ -20,7 +20,7 @@ use Russsiq\GRecaptcha\Support\Drivers\GoogleV3Driver;
  */
 class GRecaptchaManager extends Manager
 {
-	/**
+    /**
      * Драйвер, используемый по умолчанию.
      * @var string
      */
