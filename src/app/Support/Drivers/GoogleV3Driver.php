@@ -16,7 +16,7 @@ use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
  */
 class GoogleV3Driver implements GRecaptchaContract
 {
-	/**
+    /**
      * Экземпляр контейнера приложения.
      * @var Container
      */
@@ -35,35 +35,35 @@ class GoogleV3Driver implements GRecaptchaContract
 
     ];
 
-	/**
-	 * URL-адрес сервиса `создания` токена пользователя.
-	 * @var string
-	 */
-	protected $apiRender;
+    /**
+     * URL-адрес сервиса `создания` токена пользователя.
+     * @var string
+     */
+    protected $apiRender;
 
-	/**
-	 * URL-адрес сервиса `проверки` токена пользователя.
-	 * @var string
-	 */
-	protected $apiVerify;
+    /**
+     * URL-адрес сервиса `проверки` токена пользователя.
+     * @var string
+     */
+    protected $apiVerify;
 
-	/**
-	 * Ключ сайта, используемый для `создания` токена пользователя.
-	 * @var string
-	 */
-	protected $siteKey;
+    /**
+     * Ключ сайта, используемый для `создания` токена пользователя.
+     * @var string
+     */
+    protected $siteKey;
 
-	/**
-	 * Секретный ключ, используемый для `проверки` токена пользователя.
-	 * @var string
-	 */
-	protected $secretKey;
+    /**
+     * Секретный ключ, используемый для `проверки` токена пользователя.
+     * @var string
+     */
+    protected $secretKey;
 
-	/**
-	 * Нижний порог оценки действий пользователя.
-	 * @var double
-	 */
-	protected $score;
+    /**
+     * Нижний порог оценки действий пользователя.
+     * @var double
+     */
+    protected $score;
 
     /**
      * Создать новый экземпляр Валидатора капчи
@@ -73,7 +73,7 @@ class GoogleV3Driver implements GRecaptchaContract
      * @return void
      */
     public function __construct(Container $container, array $params = [])
-	{
+    {
         $this->container = $container;
 
         $this->configure($params);
@@ -86,104 +86,104 @@ class GoogleV3Driver implements GRecaptchaContract
      */
     public function configure(array $params = [])
     {
-		$this->setApiRender($params['api_render'] ?? null)
-			->setApiVerify($params['api_verify'] ?? null)
-			->setScore($params['score'] ?? null);
+        $this->setApiRender($params['api_render'] ?? null)
+            ->setApiVerify($params['api_verify'] ?? null)
+            ->setScore($params['score'] ?? null);
 
-		$this->secretKey = $params['secret_key'] ?? null;
-		$this->siteKey = $params['site_key'] ?? null;
+        $this->secretKey = $params['secret_key'] ?? null;
+        $this->siteKey = $params['site_key'] ?? null;
 
-		return $this;
+        return $this;
     }
 
-	/**
-	 * Установить URL-адрес сервиса `создания` токена пользователя.
-	 * @param  mixed  $value
-	 * @return $this
-	 */
-	public function setApiRender($value = null): self
-	{
-		$this->apiRender = filter_var($value, FILTER_VALIDATE_URL) === false
-			? $this->defaultParams['api_render'] : $value;
+    /**
+     * Установить URL-адрес сервиса `создания` токена пользователя.
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function setApiRender($value = null): self
+    {
+        $this->apiRender = filter_var($value, FILTER_VALIDATE_URL) === false
+            ? $this->defaultParams['api_render'] : $value;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Получить URL-адрес сервиса `создания` токена пользователя.
-	 * @return string
-	 */
-	public function apiRender(): string
-	{
-		return $this->apiRender;
-	}
+    /**
+     * Получить URL-адрес сервиса `создания` токена пользователя.
+     * @return string
+     */
+    public function apiRender(): string
+    {
+        return $this->apiRender;
+    }
 
-	/**
-	 * Установить URL-адрес сервиса `проверки` токена пользователя.
-	 * @param  mixed  $value
-	 * @return $this
-	 */
-	public function setApiVerify($value = null): self
-	{
-		$this->apiVerify = filter_var($value, FILTER_VALIDATE_URL) === false
-			? $this->defaultParams['api_verify'] : $value;
+    /**
+     * Установить URL-адрес сервиса `проверки` токена пользователя.
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function setApiVerify($value = null): self
+    {
+        $this->apiVerify = filter_var($value, FILTER_VALIDATE_URL) === false
+            ? $this->defaultParams['api_verify'] : $value;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Получить URL-адрес сервиса `проверки` токена пользователя.
-	 * @return string
-	 */
-	public function apiVerify(): string
-	{
-		return $this->apiVerify;
-	}
+    /**
+     * Получить URL-адрес сервиса `проверки` токена пользователя.
+     * @return string
+     */
+    public function apiVerify(): string
+    {
+        return $this->apiVerify;
+    }
 
-	/**
-	 * Установить Нижний порог оценки действий пользователя.
-	 * @param  mixed  $value
-	 * @return $this
-	 */
-	public function setScore($value = null): self
-	{
-		$this->score = filter_var($value, FILTER_VALIDATE_FLOAT, [
-			'options' => [
-		        'min_range' => 0.1,
-		        'max_range' => 0.9,
-				'default' => $this->defaultParams['score'],
-			]
-		]);
+    /**
+     * Установить Нижний порог оценки действий пользователя.
+     * @param  mixed  $value
+     * @return $this
+     */
+    public function setScore($value = null): self
+    {
+        $this->score = filter_var($value, FILTER_VALIDATE_FLOAT, [
+            'options' => [
+                'min_range' => 0.1,
+                'max_range' => 0.9,
+                'default' => $this->defaultParams['score'],
+            ]
+        ]);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Получить Нижний порог оценки действий пользователя.
-	 * @return double
-	 */
-	public function score(): double
-	{
-		return $this->score;
-	}
+    /**
+     * Получить Нижний порог оценки действий пользователя.
+     * @return double
+     */
+    public function score(): double
+    {
+        return $this->score;
+    }
 
-	public function input(string $tpl = 'g_recaptcha::g_recaptcha_input')
-	{
-		return view($tpl);
-	}
+    public function input(string $tpl = 'g_recaptcha::g_recaptcha_input')
+    {
+        return view($tpl);
+    }
 
-	public function script(string $tpl = 'g_recaptcha::g_recaptcha_script')
-	{
-		if (empty($this->siteKey)) {
-			return null;
-		}
+    public function script(string $tpl = 'g_recaptcha::g_recaptcha_script')
+    {
+        if (empty($this->siteKey)) {
+            return null;
+        }
 
-		return view($tpl, [
-				'api_render' => $this->apiRender(),
-				'site_key' => $this->siteKey
-			])
-			->render();
-	}
+        return view($tpl, [
+                'api_render' => $this->apiRender(),
+                'site_key' => $this->siteKey
+            ])
+            ->render();
+    }
 
     /**
      * [validate description]
@@ -204,52 +204,51 @@ class GoogleV3Driver implements GRecaptchaContract
         }
 
         $validator->fallbackMessages['g_recaptcha'] = trans(
-			'g_recaptcha::g_recaptcha.messages.fails'
-		);
+            'g_recaptcha::g_recaptcha.messages.fails'
+        );
 
         return false;
     }
 
-	public function verifying(string $secretKey = null, string $response = null)
-	{
-		try {
+    public function verifying(string $secretKey = null, string $response = null)
+    {
+        try {
+            if (is_null($secretKey)) {
+                throw new Exception(
+                    'Secret Key not defined.'
+                );
+            }
 
-			if (is_null($secretKey)) {
-				throw new Exception(
-					'Secret Key not defined.'
-				);
-			}
+            if (is_null($response)) {
+                throw new Exception(
+                    'User response token not provided.'
+                );
+            }
 
-			if (is_null($response)) {
-				throw new Exception(
-					'User response token not provided.'
-				);
-			}
-
-			$verified = $this->touchAnswer(
-				$this->prepareQuery($secretKey, $response)
-			);
-		} catch (Exception $e) {
-			logger(self::class, [$e->getMessage()]);
+            $verified = $this->touchAnswer(
+                $this->prepareQuery($secretKey, $response)
+            );
+        } catch (Exception $e) {
+            logger(self::class, [$e->getMessage()]);
 
             return false;
         }
 
-		return is_array($verified)
-			&& $verified['success']
-			&& $verified['score'] >= $this->score;
-	}
+        return is_array($verified)
+            && $verified['success']
+            && $verified['score'] >= $this->score;
+    }
 
     protected function touchAnswer(string $query)
     {
-		if (extension_loaded('curl') and function_exists('curl_init')) {
-			$answer = $this->getCurlAnswer($query);
+        if (extension_loaded('curl') and function_exists('curl_init')) {
+            $answer = $this->getCurlAnswer($query);
         } elseif (ini_get('allow_url_fopen')) {
             $answer = $this->getFopenAnswer($query);
         } else {
             throw new Exception(
-				'Not supported: cURL, allow_fopen_url.'
-			);
+                'Not supported: cURL, allow_fopen_url.'
+            );
         }
 
         $answer = json_decode($answer);
@@ -261,53 +260,53 @@ class GoogleV3Driver implements GRecaptchaContract
         return (array) $answer;
     }
 
-	protected function prepareQuery(string $secret, string $response)
-	{
-		return http_build_query([
+    protected function prepareQuery(string $secret, string $response)
+    {
+        return http_build_query([
             'secret' => $secret,
             'response' => $response,
 
         ]);
-	}
+    }
 
-	protected function getCurlAnswer(string $query)
-	{
-		$ch = curl_init();
+    protected function getCurlAnswer(string $query)
+    {
+        $ch = curl_init();
 
-		if (curl_errno($ch) != 0) {
-			throw new Exception(
-				'err_curl_'.curl_errno($ch).' '.curl_error($ch)
-			);
-		}
+        if (curl_errno($ch) != 0) {
+            throw new Exception(
+                'err_curl_'.curl_errno($ch).' '.curl_error($ch)
+            );
+        }
 
-		curl_setopt($ch, CURLOPT_URL, $this->apiVerify());
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $this->apiVerify());
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$answer = curl_exec($ch);
-		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $answer = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-		if (404 == $status) {
-			throw new Exception(
-				'Source file not found.'
-			);
-		} elseif ($status != 200) {
-			throw new Exception(
-				'err_curl_'.$status
-			);
-		}
+        if (404 == $status) {
+            throw new Exception(
+                'Source file not found.'
+            );
+        } elseif ($status != 200) {
+            throw new Exception(
+                'err_curl_'.$status
+            );
+        }
 
-		curl_close($ch);
+        curl_close($ch);
 
-		return $answer;
-	}
+        return $answer;
+    }
 
-	protected function getFopenAnswer(string $query)
-	{
-		return file_get_contents(urlencode(
-				$this->apiVerify().'?'.$query
-			));
-	}
+    protected function getFopenAnswer(string $query)
+    {
+        return file_get_contents(urlencode(
+            $this->apiVerify().'?'.$query
+        ));
+    }
 }
