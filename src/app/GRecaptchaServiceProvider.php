@@ -32,18 +32,6 @@ class GRecaptchaServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Регистрация служб приложения.
-     * @return void
-     */
-    public function register()
-    {
-        // Благодаря объедению конфигураций
-        // нет необходимости прописывать параметры по умолчанию.
-        // @NB: добавлено в методе `register` согласно документации.
-        $this->mergeConfigFrom($this->sourcePath('config/g_recaptcha.php'), 'g_recaptcha');
-    }
-
-    /**
      * Загрузка служб приложения.
      * @return void
      */

@@ -2,192 +2,100 @@
 
 namespace Russsiq\GRecaptcha\Support;
 
+// Исключения.
 use Exception;
 
+// Сторонние зависимости.
+use GuzzleHttp\Client as HttpClient;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Application;
-
+use Illuminate\Support\Manager;
+use Illuminate\Support\Str;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
+use Russsiq\GRecaptcha\Support\Drivers\GoogleV3Driver;
 
-class GRecaptchaManager implements GRecaptchaContract
+/**
+ * Менеджер, управляющий созданием Валидатора капчи,
+ * и предоставляющий доступ к его публичным методам.
+ */
+class GRecaptchaManager extends Manager
 {
-	const DEFAULT_API_RENDER = 'https://www.google.com/recaptcha/api.js?render=';
-	const DEFAULT_API_VERIFY = 'https://www.google.com/recaptcha/api/siteverify';
-	const DEFAULT_SCORE = 0.5;
+	/**
+     * Драйвер, используемый по умолчанию.
+     * @var string
+     */
+    protected $defaultCaptcha = 'google_v3';
 
     /**
-     * Экземпляр приложения.
-     *
-     * @var Application
+     * Получить имя драйвера, используемого по умолчанию.
+     * @return string
      */
-    protected $app;
-
-	protected $apiRender;
-	protected $apiVerify;
-
-	protected $score;
-	protected $secretKey;
-	protected $siteKey;
-
-
-    /**
-     * Создать новый экземпляр Расширения.
-     *
-     * @param  Application  $app
-     */
-    public function __construct(Application $app)
+    public function getDefaultDriver(): string
     {
-        $this->app = $app;
-
-		$this->apiRender = $this->app->config->get('g_recaptcha.api_render', self::DEFAULT_API_RENDER);
-		$this->apiVerify = $this->app->config->get('g_recaptcha.api_verify', self::DEFAULT_API_VERIFY);
-
-		$this->score = (double) $this->app->config->get('g_recaptcha.score', self::DEFAULT_SCORE);
-		$this->secretKey = $this->app->config->get('g_recaptcha.secret_key', null);
-		$this->siteKey = $this->app->config->get('g_recaptcha.site_key', null);
+        return $this->config->get('g_recaptcha.driver', $this->defaultCaptcha);
     }
-
-	public function input(string $tpl = 'g_recaptcha::g_recaptcha_input')
-	{
-		return view($tpl);
-	}
-
-	public function script(string $tpl = 'g_recaptcha::g_recaptcha_script')
-	{
-		if (is_null($this->siteKey)) {
-			return null;
-		}
-
-		return view($tpl, [
-				'api_render' => $this->apiRender,
-				'site_key' => $this->siteKey
-			])
-			->render();
-	}
 
     /**
-     * [validate description]
-     * @param  string  $attribute
-     * @param  string|null  $value
-     * @param  array  $parameters
-     * @param  ValidatorContract  $validator
-     * @return bool
+     * Задать имя драйвера репозитория, используемого по умолчанию.
+     * @param  string  $name
+     * @return void
      */
-    public function validate(
-        string $attribute,
-        string $value = null,
-        array $parameters = [],
-        ValidatorContract $validator
-    ) {
-        if ($this->verifying($this->secretKey, $value)) {
-            return true;
-        }
-
-        $validator->fallbackMessages['g_recaptcha'] = trans(
-			'g_recaptcha::g_recaptcha.messages.fails'
-		);
-
-        return false;
-    }
-
-	public function verifying(string $secretKey = null, string $response = null)
-	{
-		try {
-
-			if (is_null($secretKey)) {
-				throw new Exception(
-					'Secret Key not defined.'
-				);
-			}
-
-			if (is_null($response)) {
-				throw new Exception(
-					'User response token not provided.'
-				);
-			}
-
-			$verified = $this->touchAnswer(
-				$this->prepareQuery($secretKey, $response)
-			);
-		} catch (Exception $e) {
-			logger(self::class, [$e->getMessage()]);
-
-            return false;
-        }
-
-		return is_array($verified)
-			&& $verified['success']
-			&& $verified['score'] >= $this->score;
-	}
-
-    protected function touchAnswer(string $query)
+    public function setDefaultDriver(string $name)
     {
-		if (extension_loaded('curl') and function_exists('curl_init')) {
-			$answer = $this->getCurlAnswer($query);
-        } elseif (ini_get('allow_url_fopen')) {
-            $answer = $this->getFopenAnswer($query);
-        } else {
-            throw new Exception(
-				'Not supported: cURL, allow_fopen_url.'
-			);
-        }
-
-        $answer = json_decode($answer);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception('JSON answer error.');
-        }
-
-        return (array) $answer;
+        $this->config->set('g_recaptcha.driver', $name);
     }
 
-	protected function prepareQuery(string $secret, string $response)
-	{
-		return http_build_query([
-            'secret' => $secret,
-            'response' => $response,
+    /**
+     * Создать экземпляр Валидатора капчи
+     * с использованием драйвера GoogleV3.
+     * @return GRecaptchaContract
+     */
+    protected function createGoogleV3Driver(): GRecaptchaContract
+    {
+        $config = $this->getMasterConfig('google_v3');
 
-        ]);
-	}
+        return new GoogleV3Driver(
+            $this->container,
+            $config
+        );
+    }
 
-	protected function getCurlAnswer(string $query)
-	{
-		$ch = curl_init();
+    /**
+     * Получить конфигурацию Мастера обновлений
+     * в соответствии с выбранным драйвером.
+     * @param  string  $driver
+     * @return array
+     */
+    protected function getMasterConfig(string $driver): array
+    {
+        // Получаем массив всех настроек Мастера обновлений.
+        $config = $this->config->get('g_recaptcha', []);
 
-		if (curl_errno($ch) != 0) {
-			throw new Exception(
-				'err_curl_'.curl_errno($ch).' '.curl_error($ch)
-			);
-		}
+        // Пробрасываем уровнем выше настройки выбранного драйвера.
+        $config = array_merge($config, $config['drivers'][$driver] ?? []);
 
-		curl_setopt($ch, CURLOPT_URL, $this->apiVerify);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Удаляем массив со списком всех драйверов.
+        unset($config['drivers']);
 
-		$answer = curl_exec($ch);
-		$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        return $config;
+    }
 
-		if (404 == $status) {
-			throw new Exception(
-				'Source file not found.'
-			);
-		} elseif ($status != 200) {
-			throw new Exception(
-				'err_curl_'.$status
-			);
-		}
+    /**
+     * Получить экземпляр HTTP клиента.
+     * @param  array  $config
+     * @return HttpClient
+     */
+    protected function httpClient(array $config): HttpClient
+    {
+        $params = $config['guzzle'] ?? [];
 
-		curl_close($ch);
+        if ($config['access_token']) {
+            $params['headers'] = [
+                'Authorization' => 'Bearer '.$config['access_token'],
 
-		return $answer;
-	}
+            ];
+        }
 
-	protected function getFopenAnswer(string $query)
-	{
-		return file_get_contents(urlencode(
-				$this->apiVerify.'?'.$query
-			));
-	}
+        return new HttpClient($params);
+    }
 }
