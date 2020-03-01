@@ -14,5 +14,5 @@ interface GRecaptchaContract
         array $parameters = [],
         ValidatorContract $validator
     );
-    public function verifying(string $secretKey, string $response);
+    public function verifying(string $secretKey, string $userToken);
 }
