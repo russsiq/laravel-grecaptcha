@@ -13,8 +13,8 @@ use stdClass;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Illuminate\Contracts\View\View as ViewContract;
 use Psr\Http\Message\ResponseInterface;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
