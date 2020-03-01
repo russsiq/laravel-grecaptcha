@@ -219,7 +219,7 @@ class GoogleV3Driver implements GRecaptchaContract
         }
 
         return view($view, [
-                'api_render' => $this->$this->apiRender(),
+                'api_render' => $this->apiRender(),
                 'site_key' => $this->siteKey,
 
             ]);
