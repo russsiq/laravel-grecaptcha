@@ -54,14 +54,14 @@ class GRecaptchaManager extends Manager
     }
 
     /**
-     * Получить конфигурацию Мастера обновлений
+     * Получить конфигурацию Валидатора
      * в соответствии с выбранным драйвером.
      * @param  string  $driver
      * @return array
      */
     protected function getMasterConfig(string $driver): array
     {
-        // Получаем массив всех настроек Мастера обновлений.
+        // Получаем массив всех настроек Валидатора.
         $config = $this->config->get('g_recaptcha', []);
 
         // Пробрасываем уровнем выше настройки выбранного драйвера.
