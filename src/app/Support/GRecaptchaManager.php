@@ -79,23 +79,4 @@ class GRecaptchaManager extends Manager
 
         return $config;
     }
-
-    /**
-     * Получить экземпляр HTTP клиента.
-     * @param  array  $config
-     * @return HttpClient
-     */
-    protected function httpClient(array $config): HttpClient
-    {
-        $params = $config['guzzle'] ?? [];
-
-        if ($config['access_token']) {
-            $params['headers'] = [
-                'Authorization' => 'Bearer '.$config['access_token'],
-
-            ];
-        }
-
-        return new HttpClient($params);
-    }
 }
