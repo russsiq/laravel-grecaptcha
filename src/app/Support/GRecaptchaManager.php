@@ -2,12 +2,7 @@
 
 namespace Russsiq\GRecaptcha\Support;
 
-// Исключения.
-use Exception;
-
 // Сторонние зависимости.
-use GuzzleHttp\Client as HttpClient;
-use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Support\Manager;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 use Russsiq\GRecaptcha\Support\Drivers\GoogleV3Driver;
