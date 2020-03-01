@@ -9,7 +9,7 @@ use Illuminate\Foundation\Application;
 
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
-class GRecaptcha implements GRecaptchaContract
+class GRecaptchaManager implements GRecaptchaContract
 {
 	const DEFAULT_API_RENDER = 'https://www.google.com/recaptcha/api.js?render=';
 	const DEFAULT_API_VERIFY = 'https://www.google.com/recaptcha/api/siteverify';

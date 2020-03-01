@@ -8,7 +8,7 @@ use Validator;
 
 // Сторонние зависимости.
 use Illuminate\Support\ServiceProvider;
-use Russsiq\GRecaptcha\Support\GRecaptcha;
+use Russsiq\GRecaptcha\Support\GRecaptchaManager;
 
 /**
  * Поставщик службы ReCaptcha.
@@ -27,9 +27,21 @@ class GRecaptchaServiceProvider extends ServiceProvider
      * @var array
      */
     public $singletons = [
-        'g_recaptcha' => GRecaptcha::class,
+        'g_recaptcha' => GRecaptchaManager::class,
 
     ];
+
+    /**
+     * Регистрация служб приложения.
+     * @return void
+     */
+    public function register()
+    {
+        // Благодаря объедению конфигураций
+        // нет необходимости прописывать параметры по умолчанию.
+        // @NB: добавлено в методе `register` согласно документации.
+        $this->mergeConfigFrom($this->sourcePath('config/g_recaptcha.php'), 'g_recaptcha');
+    }
 
     /**
      * Загрузка служб приложения.
@@ -85,7 +97,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      */
     protected function defineGRecaptchaValidator()
     {
-        Validator::extendImplicit('g_recaptcha', GRecaptcha::class);
+        Validator::extendImplicit('g_recaptcha', GRecaptchaManager::class);
     }
 
     /**
