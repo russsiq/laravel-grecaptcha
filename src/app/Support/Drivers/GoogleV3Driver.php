@@ -4,10 +4,18 @@ namespace Russsiq\GRecaptcha\Support\Drivers;
 
 // Исключения.
 use Exception;
+use InvalidArgumentException;
+
+// Базовые расширения PHP.
+use stdClass;
 
 // Сторонние зависимости.
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Psr\Http\Message\ResponseInterface;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
 /**
@@ -26,6 +34,12 @@ class GoogleV3Driver implements GRecaptchaContract
      * @var Container
      */
     protected $container;
+
+    /**
+     * Экземпляр валидатора, переданный в методе `validate`.
+     * @var ValidatorContract
+     */
+    protected $validator;
 
     /**
      * Массив параметров по умолчанию экземпляра класса.
@@ -174,33 +188,45 @@ class GoogleV3Driver implements GRecaptchaContract
 
     /**
      * Получить Нижний порог оценки действий пользователя.
-     * @return double
+     * @return float
      */
-    public function score(): double
+    public function score(): float
     {
         return $this->score;
     }
 
-    public function input(string $tpl = 'g_recaptcha::g_recaptcha_input')
+    /**
+     * [input description]
+     * @param  string $view
+     * @return ViewContract
+     */
+    public function input(string $view = 'g_recaptcha::g_recaptcha_input'): ViewContract
     {
-        return view($tpl);
+        // Illuminate\Support\HtmlString
+        // return new HtmlString('<input type="hidden" name="g-recaptcha-response" value="'.csrf_token().'">');
+        return view($view);
     }
 
-    public function script(string $tpl = 'g_recaptcha::g_recaptcha_script')
+    /**
+     * [script description]
+     * @param  string $view
+     * @return ViewContract/null
+     */
+    public function script(string $view = 'g_recaptcha::g_recaptcha_script'): ?ViewContract
     {
         if (empty($this->siteKey)) {
             return null;
         }
 
-        return view($tpl, [
-                'api_render' => $this->apiRender(),
-                'site_key' => $this->siteKey
-            ])
-            ->render();
+        return view($view, [
+                'api_render' => $this->$this->apiRender(),
+                'site_key' => $this->siteKey,
+
+            ]);
     }
 
     /**
-     * [validate description]
+     * Выполнить валидацию капчи.
      * @param  string  $attribute
      * @param  string|null  $value
      * @param  array  $parameters
@@ -213,7 +239,12 @@ class GoogleV3Driver implements GRecaptchaContract
         array $parameters = [],
         ValidatorContract $validator
     ) {
-        $this->setUserToken($value ?? '');
+        // Устанавливаем сообщение по умолчанию об ошибке атрибута.
+        $this->setUserToken($value ?? '')
+            ->setValidator($validator)
+            ->setCustomMessage(trans(
+                'g_recaptcha::g_recaptcha.messages.fails'
+            ));
 
         try {
             // Проверяем свойства экземпляра класса,
@@ -222,18 +253,16 @@ class GoogleV3Driver implements GRecaptchaContract
             $this->assertSiteKey($this->siteKey);
             $this->assertUserToken($this->userToken);
 
-            if ($this->verifying($this->secretKey, $this->userToken)) {
-                return true;
-            }
+            return $this->verifying($this->secretKey, $this->userToken);
         } catch (Exception $e) {
-            logger(self::class, [$e->getMessage()]);
+            logger()
+                ->error(self::class, [
+                    'error' => $e->getMessage(),
+
+                ]);
+
+            return false;
         }
-
-        $validator->fallbackMessages['g_recaptcha'] = trans(
-            'g_recaptcha::g_recaptcha.messages.fails'
-        );
-
-        return false;
     }
 
     /**
@@ -248,86 +277,91 @@ class GoogleV3Driver implements GRecaptchaContract
         return $this;
     }
 
-    public function verifying(string $secretKey = null, string $userToken = null)
+    /**
+     * Установить экземпляр валидатора.
+     * @param  ValidatorContract  $validator
+     * @return self
+     */
+    protected function setValidator(ValidatorContract $validator): self
     {
-        $verified = $this->touchAnswer(
-            $this->prepareQuery($secretKey, $userToken)
-        );
+        $this->validator = $validator;
 
-        return is_array($verified)
-            && $verified['success']
-            && $verified['score'] >= $this->score;
+        return $this;
     }
 
-    protected function touchAnswer(string $query)
+    /**
+     * Установить пользовательское сообщение для валидатора.
+     * @param  string  $message
+     * @return void
+     */
+    protected function setCustomMessage(string $message)
     {
-        if (extension_loaded('curl') and function_exists('curl_init')) {
-            $answer = $this->getCurlAnswer($query);
-        } elseif (ini_get('allow_url_fopen')) {
-            $answer = $this->getFopenAnswer($query);
-        } else {
-            throw new Exception(
-                'Not supported: cURL, allow_fopen_url.'
-            );
-        }
-
-        $answer = json_decode($answer);
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            throw new Exception('JSON answer error.');
-        }
-
-        return (array) $answer;
-    }
-
-    protected function prepareQuery(string $secret, string $userToken)
-    {
-        return http_build_query([
-            'secret' => $secret,
-            'response' => $userToken,
+        $this->validator->setCustomMessages([
+            'g_recaptcha' => $message,
 
         ]);
     }
 
-    protected function getCurlAnswer(string $query)
+    /**
+     * Выполнить верификацию токена, полученого из формы от пользователя
+     * @param  string  $secretKey
+     * @param  string  $userToken
+     * @return bool
+     */
+    public function verifying(string $secretKey, string $userToken): bool
     {
-        $ch = curl_init();
+        $response = $this->touchAnswer($secretKey, $userToken);
+        $verified = $this->parseResponse($response);
 
-        if (curl_errno($ch) != 0) {
-            throw new Exception(
-                'err_curl_'.curl_errno($ch).' '.curl_error($ch)
-            );
-        }
+        // logger(self::class, [$verified]);
 
-        curl_setopt($ch, CURLOPT_URL, $this->apiVerify());
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $query);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $answer = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if (404 == $status) {
-            throw new Exception(
-                'Source file not found.'
-            );
-        } elseif ($status != 200) {
-            throw new Exception(
-                'err_curl_'.$status
-            );
-        }
-
-        curl_close($ch);
-
-        return $answer;
+        return $verified->success
+            && $verified->score >= $this->score();
     }
 
-    protected function getFopenAnswer(string $query)
+    /**
+     * Получить ответ от сервиса Google.
+     * @param  string  $secretKey
+     * @param  string  $userToken
+     * @return ResponseInterface
+     */
+    protected function touchAnswer(string $secretKey, string $userToken): ResponseInterface
     {
-        return file_get_contents(urlencode(
-            $this->apiVerify().'?'.$query
-        ));
+        $response = $this->httpClient()
+            ->request('GET', '', [
+                'query' => [
+                    'secret' => $secretKey,
+                    'response' => $userToken,
+
+                ],
+
+            ]);
+
+        return $this->assertResponseIsSuccessful($response) ?: $response;
+    }
+
+    /**
+     * Получить экземпляр HTTP клиента.
+     * @return ClientInterface
+     */
+    protected function httpClient(): ClientInterface
+    {
+        return new HttpClient([
+            'base_uri' => $this->apiVerify(),
+
+        ]);
+    }
+
+    /**
+     * Распарсить ответ от сервиса Google.
+     * @param  ResponseInterface  $response
+     * @return stdClass
+     */
+    protected function parseResponse(ResponseInterface $response): stdClass
+    {
+        $answer = json_decode($response->getBody());
+
+        return $this->assertJsonIsValid(json_last_error()) ?: $answer;
     }
 
     /**
