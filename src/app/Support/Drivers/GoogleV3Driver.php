@@ -72,6 +72,12 @@ class GoogleV3Driver implements GRecaptchaContract
     protected $score;
 
     /**
+     * Значение поля капчи из формы, переданное в методе `validate`.
+     * @var string|null
+     */
+    protected $userToken;
+
+    /**
      * Создать новый экземпляр Валидатора капчи
      * с использованием драйвера GoogleV3.
      * @param  Container  $container
@@ -208,8 +214,20 @@ class GoogleV3Driver implements GRecaptchaContract
         array $parameters = [],
         ValidatorContract $validator
     ) {
-        if ($this->verifying($this->secretKey, $value)) {
-            return true;
+        $this->setUserToken($value ?? '');
+
+        try {
+            // Проверяем свойства экземпляра класса,
+			// без которых невозможно дальнейшая реализация.
+            $this->assertSecretKey($this->secretKey);
+            $this->assertSiteKey($this->siteKey);
+            $this->assertUserToken($this->userToken);
+
+            if ($this->verifying($this->secretKey, $this->userToken)) {
+                return true;
+            }
+        } catch (Exception $e) {
+            logger(self::class, [$e->getMessage()]);
         }
 
         $validator->fallbackMessages['g_recaptcha'] = trans(
@@ -219,29 +237,23 @@ class GoogleV3Driver implements GRecaptchaContract
         return false;
     }
 
-    public function verifying(string $secretKey = null, string $response = null)
+	/**
+	 * Установить значение токена, полученого из формы от пользователя.
+	 * @param  string  $userToken
+	 * @return self
+	 */
+    protected function setUserToken(string $userToken): self
     {
-        try {
-            if (is_null($secretKey)) {
-                throw new Exception(
-                    'Secret Key not defined.'
-                );
-            }
+        $this->userToken = $userToken;
 
-            if (is_null($response)) {
-                throw new Exception(
-                    'User response token not provided.'
-                );
-            }
+        return $this;
+    }
 
-            $verified = $this->touchAnswer(
-                $this->prepareQuery($secretKey, $response)
-            );
-        } catch (Exception $e) {
-            logger(self::class, [$e->getMessage()]);
-
-            return false;
-        }
+    public function verifying(string $secretKey = null, string $userToken = null)
+    {
+        $verified = $this->touchAnswer(
+            $this->prepareQuery($secretKey, $userToken)
+        );
 
         return is_array($verified)
             && $verified['success']
@@ -269,11 +281,11 @@ class GoogleV3Driver implements GRecaptchaContract
         return (array) $answer;
     }
 
-    protected function prepareQuery(string $secret, string $response)
+    protected function prepareQuery(string $secret, string $userToken)
     {
         return http_build_query([
             'secret' => $secret,
-            'response' => $response,
+            'response' => $userToken,
 
         ]);
     }
