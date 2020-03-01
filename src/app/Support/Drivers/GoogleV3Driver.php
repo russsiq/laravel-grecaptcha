@@ -101,9 +101,9 @@ class GoogleV3Driver implements GRecaptchaContract
             ->setApiVerify($params['api_verify'] ?? null)
             ->setScore($params['score'] ?? null);
 
-		// Эти параметры являются обязательными,
-		// но в силу разных обстоятельств они могут быть не указаны.
-		// Поэтому на этапе инициализации устанавливаем пустые значения.
+        // Эти параметры являются обязательными,
+        // но в силу разных обстоятельств они могут быть не указаны.
+        // Поэтому на этапе инициализации устанавливаем пустые значения.
         $this->secretKey = $params['secret_key'] ?? null;
         $this->siteKey = $params['site_key'] ?? null;
 
@@ -217,7 +217,7 @@ class GoogleV3Driver implements GRecaptchaContract
 
         try {
             // Проверяем свойства экземпляра класса,
-			// без которых невозможно дальнейшая реализация.
+            // без которых невозможно дальнейшая реализация.
             $this->assertSecretKey($this->secretKey);
             $this->assertSiteKey($this->siteKey);
             $this->assertUserToken($this->userToken);
@@ -236,11 +236,11 @@ class GoogleV3Driver implements GRecaptchaContract
         return false;
     }
 
-	/**
-	 * Установить значение токена, полученого из формы от пользователя.
-	 * @param  string  $userToken
-	 * @return self
-	 */
+    /**
+     * Установить значение токена, полученого из формы от пользователя.
+     * @param  string  $userToken
+     * @return self
+     */
     protected function setUserToken(string $userToken): self
     {
         $this->userToken = $userToken;
