@@ -228,19 +228,19 @@ class GoogleV3Driver implements GRecaptchaContract
     /**
      * Выполнить валидацию капчи.
      * @param  string  $attribute
-     * @param  string|null  $value
+     * @param  string|null  $userToken
      * @param  array  $parameters
      * @param  ValidatorContract  $validator
      * @return bool
      */
     public function validate(
         string $attribute,
-        string $value = null,
+        string $userToken = null,
         array $parameters = [],
         ValidatorContract $validator
     ) {
         // Устанавливаем сообщение по умолчанию об ошибке атрибута.
-        $this->setUserToken($value ?? '')
+        $this->setUserToken($userToken ?? '')
             ->setValidator($validator)
             ->setCustomMessage(trans(
                 'g_recaptcha::g_recaptcha.messages.fails'

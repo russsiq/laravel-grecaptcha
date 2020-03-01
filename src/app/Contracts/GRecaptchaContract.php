@@ -10,7 +10,7 @@ interface GRecaptchaContract
     public function script(string $tpl);
     public function validate(
         string $attribute,
-        string $value = null,
+        string $userToken = null,
         array $parameters = [],
         ValidatorContract $validator
     );
