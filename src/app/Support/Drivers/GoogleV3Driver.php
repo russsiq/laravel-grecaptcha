@@ -90,12 +90,15 @@ class GoogleV3Driver implements GRecaptchaContract
      * @param  array  $params
      * @return $this
      */
-    public function configure(array $params = [])
+    public function configure(array $params = []): self
     {
         $this->setApiRender($params['api_render'] ?? null)
             ->setApiVerify($params['api_verify'] ?? null)
             ->setScore($params['score'] ?? null);
 
+		// Эти параметры являются обязательными,
+		// но в силу разных обстоятельств они могут быть не указаны.
+		// Поэтому на этапе инициализации устанавливаем пустые значения.
         $this->secretKey = $params['secret_key'] ?? null;
         $this->siteKey = $params['site_key'] ?? null;
 
