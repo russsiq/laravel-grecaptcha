@@ -309,4 +309,52 @@ class GoogleV3Driver implements GRecaptchaContract
             $this->apiVerify().'?'.$query
         ));
     }
+
+    /**
+     * Определить, что Секретный ключ был задан.
+     * @param  string  $secretKey
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function assertSecretKey($secretKey)
+    {
+        if (! is_string($secretKey) || $secretKey === '') {
+            throw new InvalidArgumentException(
+                'Secret Key not defined.'
+            );
+        }
+    }
+
+    /**
+     * Определить, что Ключ сайта был задан.
+     * @param  string  $siteKey
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function assertSiteKey($siteKey)
+    {
+        if (! is_string($siteKey) || $siteKey === '') {
+            throw new InvalidArgumentException(
+                'Site Key not defined.'
+            );
+        }
+    }
+
+    /**
+     * Определить, что был предоставлен токен при отправки формы пользователем.
+     * @param  string  $userToken
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function assertUserToken($userToken)
+    {
+        if (! is_string($userToken) || $userToken === '') {
+            throw new InvalidArgumentException(
+                'User response token not provided.'
+            );
+        }
+    }
 }
