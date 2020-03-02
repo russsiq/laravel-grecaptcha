@@ -314,12 +314,12 @@ class GoogleV3Driver implements GRecaptchaContract
     public function verifying(string $secretKey, string $userToken): bool
     {
         $response = $this->touchAnswer($secretKey, $userToken);
-        $verified = $this->parseResponse($response);
+        $parsed = $this->parseResponse($response);
 
-        // logger(self::class, [$verified]);
+        // logger(self::class, [$parsed]);
 
-        return $verified->success
-            && $verified->score >= $this->score();
+        return $parsed->success
+            && $parsed->score >= $this->score();
     }
 
     /**
