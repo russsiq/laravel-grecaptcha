@@ -26,7 +26,7 @@ interface GRecaptchaContract
     public function script(string $view): ?Htmlable;
 
     /**
-     * Выполнить валидацию капчи.
+     * Выполнить валидацию капчи (токена), полученого из формы от пользователя.
      * @param  string  $attribute
      * @param  string|null  $userToken
      * @param  array  $parameters
@@ -39,12 +39,4 @@ interface GRecaptchaContract
         array $parameters = [],
         ValidatorContract $validator
     ): bool;
-
-    /**
-     * Выполнить верификацию токена, полученого из формы от пользователя.
-     * @param  string  $secretKey
-     * @param  string  $userToken
-     * @return bool
-     */
-    public function verifying(string $secretKey, string $userToken): bool;
 }

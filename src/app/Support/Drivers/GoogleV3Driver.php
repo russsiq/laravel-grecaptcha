@@ -229,7 +229,7 @@ class GoogleV3Driver implements GRecaptchaContract
     }
 
     /**
-     * Выполнить валидацию капчи.
+     * Выполнить валидацию капчи (токена), полученого из формы от пользователя.
      * @param  string  $attribute
      * @param  string|null  $userToken
      * @param  array  $parameters
@@ -311,7 +311,7 @@ class GoogleV3Driver implements GRecaptchaContract
      * @param  string  $userToken
      * @return bool
      */
-    public function verifying(string $secretKey, string $userToken): bool
+    protected function verifying(string $secretKey, string $userToken): bool
     {
         $response = $this->touchAnswer($secretKey, $userToken);
         $parsed = $this->parseResponse($response);
