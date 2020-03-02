@@ -17,12 +17,12 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 use Psr\Http\Message\ResponseInterface;
-use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
+use Russsiq\GRecaptcha\Support\AbstractGRecaptcha;
 
 /**
  * Создание и валидация капчи с использованием драйвера GoogleV3.
  */
-class GoogleV3Driver implements GRecaptchaContract
+class GoogleV3Driver extends AbstractGRecaptcha
 {
     /**
      * Код успешного ответа.
