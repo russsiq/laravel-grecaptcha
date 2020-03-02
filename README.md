@@ -106,7 +106,7 @@ public function rules(): array
 
         'g-recaptcha-response' => [
             'bail',
-            'required',
+            config('g_recaptcha.used') ? 'required' : 'nullable',
             'string',
             'g_recaptcha',
         ],
