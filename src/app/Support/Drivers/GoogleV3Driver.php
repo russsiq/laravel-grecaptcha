@@ -14,7 +14,6 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\HtmlString;
 use Psr\Http\Message\ResponseInterface;
