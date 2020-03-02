@@ -280,31 +280,6 @@ class GoogleV3Driver extends AbstractGRecaptcha
     }
 
     /**
-     * Установить экземпляр валидатора.
-     * @param  ValidatorContract  $validator
-     * @return self
-     */
-    protected function setValidator(ValidatorContract $validator): self
-    {
-        $this->validator = $validator;
-
-        return $this;
-    }
-
-    /**
-     * Установить пользовательское сообщение для валидатора.
-     * @param  string  $message
-     * @return void
-     */
-    protected function setCustomMessage(string $message)
-    {
-        $this->validator->setCustomMessages([
-            'g_recaptcha' => $message,
-
-        ]);
-    }
-
-    /**
      * Выполнить верификацию токена, полученого из формы от пользователя.
      * @param  string  $secretKey
      * @param  string  $userToken
