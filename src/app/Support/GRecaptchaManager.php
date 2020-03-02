@@ -6,6 +6,7 @@ namespace Russsiq\GRecaptcha\Support;
 use Illuminate\Support\Manager;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 use Russsiq\GRecaptcha\Support\Drivers\GoogleV3Driver;
+use Russsiq\GRecaptcha\Support\Drivers\NullableDriver;
 
 /**
  * Менеджер, управляющий созданием Валидатора капчи,
@@ -25,7 +26,9 @@ class GRecaptchaManager extends Manager
      */
     public function getDefaultDriver(): string
     {
-        return $this->config->get('g_recaptcha.driver', $this->defaultCaptcha);
+        return $this->config->get('g_recaptcha.used', true)
+            ? $this->config->get('g_recaptcha.driver', $this->defaultCaptcha)
+            : 'nullable';
     }
 
     /**
@@ -48,6 +51,20 @@ class GRecaptchaManager extends Manager
         $config = $this->getMasterConfig('google_v3');
 
         return new GoogleV3Driver(
+            $this->container,
+            $config
+        );
+    }
+
+    /**
+     * Создать экземпляр заглушки Валидатора капчи.
+     * @return GRecaptchaContract
+     */
+    protected function createNullableDriver(): GRecaptchaContract
+    {
+        $config = $this->getMasterConfig('nullable');
+
+        return new NullableDriver(
             $this->container,
             $config
         );
