@@ -71,11 +71,11 @@ class GRecaptchaServiceProvider extends ServiceProvider
     protected function defineGRecaptchaBladeDirective()
     {
         Blade::directive('g_recaptcha_input', function ($expression) {
-            return "<?php echo app('g_recaptcha')->input($expression); ?>";
+            return "<?php echo app('g_recaptcha')->input(); ?>";
         });
 
         Blade::directive('g_recaptcha_script', function ($expression) {
-            return "<?php echo app('g_recaptcha')->script($expression); ?>";
+            return "<?php echo app('g_recaptcha')->script({$expression}); ?>";
         });
     }
 

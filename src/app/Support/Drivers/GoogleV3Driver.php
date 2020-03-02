@@ -14,7 +14,9 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Contracts\View\View as ViewContract;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
 use Psr\Http\Message\ResponseInterface;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
@@ -196,23 +198,22 @@ class GoogleV3Driver implements GRecaptchaContract
     }
 
     /**
-     * [input description]
-     * @param  string $view
-     * @return ViewContract
+     * Получить HTML строковое представление поля ввода капчи пользователем.
+     * @return Htmlable|null
      */
-    public function input(string $view = 'g_recaptcha::g_recaptcha_input'): ViewContract
+    public function input(): ?Htmlable
     {
-        // Illuminate\Support\HtmlString
-        // return new HtmlString('<input type="hidden" name="g-recaptcha-response" value="'.csrf_token().'">');
-        return view($view);
+        return new HtmlString(
+            '<input type="hidden" name="g-recaptcha-response" value="" />'
+        );
     }
 
     /**
-     * [script description]
-     * @param  string $view
-     * @return ViewContract/null
+     * Получить HTML строковое представление JavaScript капчи.
+     * @param  string  $view
+     * @return Htmlable|null
      */
-    public function script(string $view = 'g_recaptcha::g_recaptcha_script'): ?ViewContract
+    public function script(string $view = 'g_recaptcha::g_recaptcha_script'): ?Htmlable
     {
         if (empty($this->siteKey)) {
             return null;
@@ -238,7 +239,7 @@ class GoogleV3Driver implements GRecaptchaContract
         string $userToken = null,
         array $parameters = [],
         ValidatorContract $validator
-    ) {
+    ): bool {
         // Устанавливаем сообщение по умолчанию об ошибке атрибута.
         $this->setUserToken($userToken ?? '')
             ->setValidator($validator)
@@ -303,7 +304,7 @@ class GoogleV3Driver implements GRecaptchaContract
     }
 
     /**
-     * Выполнить верификацию токена, полученого из формы от пользователя
+     * Выполнить верификацию токена, полученого из формы от пользователя.
      * @param  string  $secretKey
      * @param  string  $userToken
      * @return bool
