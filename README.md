@@ -42,10 +42,14 @@
 php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"
 ```
 
-Помимо этого, доступна групповая публикация файлов по отдельным меткам `config`, `lang`, `views`:
+Помимо этого, доступна групповая публикация файлов по отдельным меткам `config`, `fonts`, `lang`, `views`:
 
 ```console
 php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=config --force
+```
+
+```console
+php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=fonts --force
 ```
 
 ```console
@@ -72,14 +76,23 @@ php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvi
 @enderror
 
 <form action="/profile" method="POST">
-    @g_recaptcha_input
     @csrf
+
+    @if (config('g_recaptcha.used'))
+    <div class="form-group row">
+        <div class="col-md-4">
+            @g_recaptcha_input
+        </div>
+    </div>
+    @endif
 
     <!-- ...code -->
 </form>
 ```
 
-Добавьте JavaScript в главный шаблон перед закрывающим тегом `</body>`, используя директиву `@g_recaptcha_script`. Данная директива может принимать один входящий параметр, в котором можно указать относительный путь на расположение шаблона.
+Добавьте JavaScript в главный шаблон перед закрывающим тегом `</body>`, используя директиву `@g_recaptcha_script`.
+
+Обе директивы могут принимать по одному входящему параметру, в котором можно указать относительные пути на расположение шаблонов.
 
 После отправки формы и в случае применения асинхронного запроса (AJAX), для обновления скрытого поля используйте JavaScript функцию `grecaptcha_reload();`.
 
