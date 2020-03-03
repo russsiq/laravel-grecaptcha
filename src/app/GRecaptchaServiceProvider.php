@@ -94,6 +94,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      */
     protected function loadGRecaptchaFiles()
     {
+        $this->loadRoutesFrom($this->sourcePath('routes/web.php'));
         $this->loadTranslationsFrom($this->sourcePath('resources/lang'), 'g_recaptcha');
         $this->loadViewsFrom($this->sourcePath('resources/views/components/partials'), 'g_recaptcha');
     }
@@ -109,6 +110,11 @@ class GRecaptchaServiceProvider extends ServiceProvider
         $this->publishes([
             $this->sourcePath('config/g_recaptcha.php') => config_path('g_recaptcha.php'),
         ], 'config');
+
+        // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=fonts --force
+        $this->publishes([
+            $this->sourcePath('resources/fonts') => public_path('vendor/g_recaptcha/fonts'),
+        ], 'fonts');
 
         // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=lang --force
         $this->publishes([
