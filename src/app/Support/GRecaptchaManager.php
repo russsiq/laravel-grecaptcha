@@ -6,6 +6,7 @@ namespace Russsiq\GRecaptcha\Support;
 use Illuminate\Support\Manager;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 use Russsiq\GRecaptcha\Support\Drivers\GoogleV3Driver;
+use Russsiq\GRecaptcha\Support\Drivers\ImageCodeDriver;
 use Russsiq\GRecaptcha\Support\Drivers\NullableDriver;
 
 /**
@@ -51,6 +52,21 @@ class GRecaptchaManager extends Manager
         $config = $this->getMasterConfig('google_v3');
 
         return new GoogleV3Driver(
+            $this->container,
+            $config
+        );
+    }
+
+    /**
+     * Создать экземпляр Валидатора капчи
+     * с использованием изображения с числом.
+     * @return GRecaptchaContract
+     */
+    protected function createImageCodeDriver(): GRecaptchaContract
+    {
+        $config = $this->getMasterConfig('image_code');
+
+        return new ImageCodeDriver(
             $this->container,
             $config
         );
