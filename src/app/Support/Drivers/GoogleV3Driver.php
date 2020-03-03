@@ -14,8 +14,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\ClientInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Support\HtmlString;
+use Illuminate\Contracts\Support\Renderable;
 use Psr\Http\Message\ResponseInterface;
 use Russsiq\GRecaptcha\Support\AbstractGRecaptcha;
 
@@ -200,21 +199,21 @@ class GoogleV3Driver extends AbstractGRecaptcha
 
     /**
      * Получить HTML строковое представление поля ввода капчи пользователем.
-     * @return Htmlable|null
+     * @return Renderable|null
      */
-    public function input(): ?Htmlable
+    public function input(string $view = 'g_recaptcha::google_v3-input'): ?Renderable
     {
-        return new HtmlString(
-            '<input type="hidden" name="g-recaptcha-response" value="" />'
-        );
+        return view($view, [
+
+            ]);
     }
 
     /**
      * Получить HTML строковое представление JavaScript капчи.
      * @param  string  $view
-     * @return Htmlable|null
+     * @return Renderable|null
      */
-    public function script(string $view = 'g_recaptcha::g_recaptcha_script'): ?Htmlable
+    public function script(string $view = 'g_recaptcha::google_v3-script'): ?Renderable
     {
         if (empty($this->siteKey)) {
             return null;

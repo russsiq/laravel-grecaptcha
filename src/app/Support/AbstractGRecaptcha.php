@@ -3,7 +3,7 @@
 namespace Russsiq\GRecaptcha\Support;
 
 // Сторонние зависимости.
-use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Russsiq\GRecaptcha\Contracts\GRecaptchaContract;
 
@@ -20,16 +20,17 @@ abstract class AbstractGRecaptcha implements GRecaptchaContract
 
     /**
      * Получить HTML строковое представление поля ввода капчи пользователем.
-     * @return Htmlable|null
+     * @param  string  $view
+     * @return Renderable|null
      */
-    abstract public function input(): ?Htmlable;
+    abstract public function input(string $view): ?Renderable;
 
     /**
      * Получить HTML строковое представление JavaScript капчи.
      * @param  string  $view
-     * @return Htmlable|null
+     * @return Renderable|null
      */
-    abstract public function script(string $view): ?Htmlable;
+    abstract public function script(string $view): ?Renderable;
 
     /**
      * Выполнить валидацию капчи.
