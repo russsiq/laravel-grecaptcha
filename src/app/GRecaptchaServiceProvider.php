@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 use Russsiq\GRecaptcha\Support\GRecaptchaManager;
 
 /**
- * Поставщик службы ReCaptcha.
+ * Поставщик службы GRecaptcha.
  */
 class GRecaptchaServiceProvider extends ServiceProvider
 {
@@ -71,7 +71,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
     protected function defineGRecaptchaBladeDirective()
     {
         Blade::directive('g_recaptcha_input', function ($expression) {
-            return "<?php echo app('g_recaptcha')->input(); ?>";
+            return "<?php echo app('g_recaptcha')->input({$expression}); ?>";
         });
 
         Blade::directive('g_recaptcha_script', function ($expression) {
