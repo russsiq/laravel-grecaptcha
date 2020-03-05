@@ -254,7 +254,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
             $this->assertSiteKey($this->siteKey);
             $this->assertUserToken($this->userToken);
 
-            return $this->verifying($this->secretKey, $this->userToken);
+            return $this->verify($this->secretKey, $this->userToken);
         } catch (Exception $e) {
             logger()
                 ->error(self::class, [
@@ -284,7 +284,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
      * @param  string  $userToken
      * @return bool
      */
-    protected function verifying(string $secretKey, string $userToken): bool
+    protected function verify(string $secretKey, string $userToken): bool
     {
         $response = $this->touchAnswer($secretKey, $userToken);
         $parsed = $this->parseResponse($response);
