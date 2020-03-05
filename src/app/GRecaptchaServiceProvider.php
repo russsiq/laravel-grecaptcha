@@ -17,7 +17,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
 {
     /**
      * Путь до директории с исходниками.
-     * @var string
+     * @const string
      */
     const SOURCE_DIR = __DIR__.'/../';
 
@@ -35,7 +35,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      * Загрузка служб приложения.
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // Загрузка файлов Расширения.
         $this->loadGRecaptchaFiles();
@@ -68,7 +68,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      * Определить директивы шаблонизатора Blade.
      * @return void
      */
-    protected function defineGRecaptchaBladeDirective()
+    protected function defineGRecaptchaBladeDirective(): void
     {
         Blade::directive('g_recaptcha_input', function ($expression) {
             return "<?php echo app('g_recaptcha')->input({$expression}); ?>";
@@ -83,7 +83,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      * Определить Расширение для валидатора.
      * @return void
      */
-    protected function defineGRecaptchaValidator()
+    protected function defineGRecaptchaValidator(): void
     {
         Validator::extendImplicit('g_recaptcha', GRecaptchaManager::class);
     }
@@ -92,7 +92,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      * Загрузка файлов Расширения.
      * @return void
      */
-    protected function loadGRecaptchaFiles()
+    protected function loadGRecaptchaFiles(): void
     {
         $this->loadRoutesFrom($this->sourcePath('routes/web.php'));
         $this->loadTranslationsFrom($this->sourcePath('resources/lang'), 'g_recaptcha');
@@ -104,7 +104,7 @@ class GRecaptchaServiceProvider extends ServiceProvider
      * `php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider"`
      * @return void
      */
-    protected function publishGRecaptchaFiles()
+    protected function publishGRecaptchaFiles(): void
     {
         // php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvider" --tag=config --force
         $this->publishes([

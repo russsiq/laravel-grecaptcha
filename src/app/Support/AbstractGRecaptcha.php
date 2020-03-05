@@ -19,14 +19,16 @@ abstract class AbstractGRecaptcha implements GRecaptchaContract
     protected $validator;
 
     /**
-     * Получить HTML строковое представление поля ввода капчи пользователем.
+     * Получить проанализированное HTML строковое представление
+     * поля для ввода капчи пользователем.
      * @param  string  $view
      * @return Renderable|null
      */
     abstract public function input(string $view): ?Renderable;
 
     /**
-     * Получить HTML строковое представление JavaScript капчи.
+     * Получить проанализированное HTML строковое представление
+     * JavaScript'ов капчи.
      * @param  string  $view
      * @return Renderable|null
      */
@@ -64,7 +66,7 @@ abstract class AbstractGRecaptcha implements GRecaptchaContract
      * @param  string  $message
      * @return void
      */
-    protected function setCustomMessage(string $message)
+    protected function setCustomMessage(string $message): void
     {
         $this->validator->setCustomMessages([
             'g_recaptcha' => $message,

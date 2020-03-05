@@ -16,7 +16,7 @@ class ImageCodeDriver extends AbstractGRecaptcha
 {
     /**
      * Имя кода, используемое для записи в кэш.
-     * @var string
+     * @const string
      */
     const SESSION_CODE_NAME = 'g-recaptcha-response';
 
@@ -74,10 +74,11 @@ class ImageCodeDriver extends AbstractGRecaptcha
      * Создать экземпляр заглушки Валидатора капчи.
      * @param  Container  $container
      * @param  array  $params
-     * @return void
      */
-    public function __construct(Container $container, array $params = [])
-    {
+    public function __construct(
+        Container $container,
+        array $params = []
+    ) {
         $this->container = $container;
 
         $this->configure($params);
@@ -99,7 +100,9 @@ class ImageCodeDriver extends AbstractGRecaptcha
     }
 
     /**
-     * Получить HTML строковое представление поля ввода капчи пользователем.
+     * Получить проанализированное HTML строковое представление
+     * поля для ввода капчи пользователем.
+     * @param  string  $view
      * @return Renderable|null
      */
     public function input(string $view = 'g_recaptcha::image_code-input'): ?Renderable
@@ -111,7 +114,8 @@ class ImageCodeDriver extends AbstractGRecaptcha
     }
 
     /**
-     * Получить HTML строковое представление JavaScript капчи.
+     * Получить проанализированное HTML строковое представление
+     * JavaScript'ов капчи.
      * @param  string  $view
      * @return Renderable|null
      */

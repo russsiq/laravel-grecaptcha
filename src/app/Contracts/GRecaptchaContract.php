@@ -13,14 +13,16 @@ use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 interface GRecaptchaContract
 {
     /**
-     * Получить HTML строковое представление поля ввода капчи пользователем.
+     * Получить проанализированное HTML строковое представление
+     * поля для ввода капчи пользователем.
      * @param  string  $view
      * @return Renderable|null
      */
     public function input(string $view): ?Renderable;
 
     /**
-     * Получить HTML строковое представление JavaScript капчи.
+     * Получить проанализированное HTML строковое представление
+     * JavaScript'ов капчи.
      * @param  string  $view
      * @return Renderable|null
      */

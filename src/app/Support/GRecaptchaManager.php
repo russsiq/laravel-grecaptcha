@@ -37,7 +37,7 @@ class GRecaptchaManager extends Manager
      * @param  string  $name
      * @return void
      */
-    public function setDefaultDriver(string $name)
+    public function setDefaultDriver(string $name): void
     {
         $this->config->set('g_recaptcha.driver', $name);
     }
@@ -49,7 +49,7 @@ class GRecaptchaManager extends Manager
      */
     protected function createGoogleV3Driver(): GRecaptchaContract
     {
-        $config = $this->getMasterConfig('google_v3');
+        $config = $this->getDriverConfig('google_v3');
 
         return new GoogleV3Driver(
             $this->container,
@@ -64,7 +64,7 @@ class GRecaptchaManager extends Manager
      */
     protected function createImageCodeDriver(): GRecaptchaContract
     {
-        $config = $this->getMasterConfig('image_code');
+        $config = $this->getDriverConfig('image_code');
 
         return new ImageCodeDriver(
             $this->container,
@@ -78,7 +78,7 @@ class GRecaptchaManager extends Manager
      */
     protected function createNullableDriver(): GRecaptchaContract
     {
-        $config = $this->getMasterConfig('nullable');
+        $config = $this->getDriverConfig('nullable');
 
         return new NullableDriver(
             $this->container,
@@ -92,7 +92,7 @@ class GRecaptchaManager extends Manager
      * @param  string  $driver
      * @return array
      */
-    protected function getMasterConfig(string $driver): array
+    protected function getDriverConfig(string $driver): array
     {
         // Получаем массив всех настроек Валидатора.
         $config = $this->config->get('g_recaptcha', []);

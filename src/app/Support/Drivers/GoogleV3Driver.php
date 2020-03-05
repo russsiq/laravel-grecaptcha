@@ -25,7 +25,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
 {
     /**
      * Код успешного ответа.
-     * @var int
+     * @const int
      */
     const HTTP_OK = 200;
 
@@ -95,10 +95,11 @@ class GoogleV3Driver extends AbstractGRecaptcha
      * с использованием драйвера GoogleV3.
      * @param  Container  $container
      * @param  array  $params
-     * @return void
      */
-    public function __construct(Container $container, array $params = [])
-    {
+    public function __construct(
+        Container $container,
+        array $params = []
+    ) {
         $this->container = $container;
 
         $this->configure($params);
@@ -198,7 +199,9 @@ class GoogleV3Driver extends AbstractGRecaptcha
     }
 
     /**
-     * Получить HTML строковое представление поля ввода капчи пользователем.
+     * Получить проанализированное HTML строковое представление
+     * поля для ввода капчи пользователем.
+     * @param  string  $view
      * @return Renderable|null
      */
     public function input(string $view = 'g_recaptcha::google_v3-input'): ?Renderable
@@ -209,7 +212,8 @@ class GoogleV3Driver extends AbstractGRecaptcha
     }
 
     /**
-     * Получить HTML строковое представление JavaScript капчи.
+     * Получить проанализированное HTML строковое представление
+     * JavaScript'ов капчи.
      * @param  string  $view
      * @return Renderable|null
      */
@@ -347,7 +351,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
      *
      * @throws InvalidArgumentException
      */
-    protected function assertSecretKey($secretKey)
+    protected function assertSecretKey($secretKey): void
     {
         if (! is_string($secretKey) || $secretKey === '') {
             throw new InvalidArgumentException(
@@ -363,7 +367,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
      *
      * @throws InvalidArgumentException
      */
-    protected function assertSiteKey($siteKey)
+    protected function assertSiteKey($siteKey): void
     {
         if (! is_string($siteKey) || $siteKey === '') {
             throw new InvalidArgumentException(
@@ -379,7 +383,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
      *
      * @throws InvalidArgumentException
      */
-    protected function assertUserToken($userToken)
+    protected function assertUserToken($userToken): void
     {
         if (! is_string($userToken) || $userToken === '') {
             throw new InvalidArgumentException(
@@ -395,7 +399,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
      *
      * @throws Exception
      */
-    protected function assertResponseIsSuccessful(ResponseInterface $response)
+    protected function assertResponseIsSuccessful(ResponseInterface $response): void
     {
         $code = $response->getStatusCode();
 
@@ -414,7 +418,7 @@ class GoogleV3Driver extends AbstractGRecaptcha
      *
      * @throws Exception
      */
-    protected function assertJsonIsValid(int $jsonError)
+    protected function assertJsonIsValid(int $jsonError): void
     {
         if ($jsonError !== JSON_ERROR_NONE) {
             throw new Exception(sprintf(
