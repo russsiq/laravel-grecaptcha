@@ -10,14 +10,14 @@
 
     ```json
     "require": {
-        "russsiq/laravel-grecaptcha": "dev-master"
+        "russsiq/laravel-grecaptcha": "^0.1"
     }
     ```
 
  - **2** Для подключения в уже созданный проект воспользуйтесь командной строкой:
 
     ```console
-    composer require russsiq/laravel-grecaptcha:dev-master
+    composer require "russsiq/laravel-grecaptcha:^0.1"
     ```
 
  - **3** Если в вашем приложении включен отказ от обнаружения пакетов в директиве `dont-discover` в разделе `extra` файла `composer.json`, то необходимо самостоятельно добавить в файле `config/app.php`:
