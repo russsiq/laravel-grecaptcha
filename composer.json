@@ -12,10 +12,6 @@
         "homepage": "https://github.com/russsiq",
         "role": "Developer"
     }],
-    "repositories": [{
-        "type": "vcs",
-        "url": "https://github.com/russsiq/laravel-grecaptcha"
-    }],
     "require": {
         "php": ">=7.2.0",
         "guzzlehttp/guzzle": "^6.3",
