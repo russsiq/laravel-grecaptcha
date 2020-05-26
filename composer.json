@@ -1,6 +1,6 @@
 {
     "name": "russsiq/laravel-grecaptcha",
-    "description": "Расширение валидатора Laravel 6.x для проверки Google reCAPTCHA v3.",
+    "description": "Расширение валидатора Laravel 7.x для проверки Google reCAPTCHA v3.",
     "keywords": ["laravel", "google recaptcha"],
     "homepage": "https://github.com/russsiq/laravel-grecaptcha",
     "type": "library",
