@@ -27,9 +27,15 @@ class GRecaptchaManager extends Manager
      */
     public function getDefaultDriver(): string
     {
-        return $this->config->get('g_recaptcha.used', true)
-            ? $this->config->get('g_recaptcha.driver', $this->defaultCaptcha)
-            : 'nullable';
+        // Если капча используется.
+        if ($this->config->get('g_recaptcha.used', true)) {
+            // Если указано пустое значение `GRECAPTCHA_DRIVER` в файле `.env`,
+            // то возвращаем капчу, используемую по умолчанию.
+            // @NB Не пропускаем пустое значение!
+            return $this->config->get('g_recaptcha.driver') ?: $this->defaultCaptcha;
+        }
+
+        return 'nullable';
     }
 
     /**
