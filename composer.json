@@ -20,7 +20,7 @@
     "require-dev": {},
     "autoload": {
         "psr-4": {
-            "Russsiq\\GRecaptcha\\": "src/app/"
+            "Russsiq\\GRecaptcha\\": "src/"
         }
     },
     "extra": {
