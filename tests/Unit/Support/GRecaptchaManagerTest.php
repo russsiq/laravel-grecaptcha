@@ -6,6 +6,7 @@ namespace Tests\Unit\Support;
 use Russsiq\GRecaptcha\Support\GRecaptchaManager;
 
 // Сторонние зависимости.
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Container\Container;
 
 // Библиотеки тестирования.
@@ -34,6 +35,64 @@ class GRecaptchaManagerTest extends TestCase
         $manager = $this->createManager();
 
         $this->assertInstanceOf(GRecaptchaManager::class, $manager);
+    }
+
+    /**
+     * @test
+     * @covers ::getDefaultDriver
+     *
+     * Получить имя драйвера, используемого по умолчанию.
+     * @return void
+     *
+     * @FIX https://github.com/russsiq/laravel-grecaptcha/issues/2
+     */
+    public function testGetDefaultDriver(): void
+    {
+        // Создать заглушку для класса Container.
+        $container = $this->createMock(Container::class);
+
+        // Настроить заглушку.
+        $container->method('make')
+            ->will($this->returnCallback(function ($argument) {
+                if ('config' !== $argument) {
+                    $this->markTestSkipped(
+                        'Заглушка Контейнера служб настроена только на извлечение (`make`) с абстракцией `config`.'
+                    );
+                }
+
+                // Создать карту аргументов для возврата значений
+                $map = [
+                    [
+                        'g_recaptcha', [
+                            'used' => true,
+                            'driver' => '',
+                        ]
+                    ]
+                ];
+
+                // Создать заглушку для класса ConfigRepository.
+                $config = $this->createMock(ConfigRepository::class);
+
+                // Настроить заглушку.
+                $config->method('get')
+                    ->will($this->returnValueMap($map));
+
+                return $config;
+            }));
+
+        $manager = $this->createManager($container);
+
+        $this->assertInstanceOf(GRecaptchaManager::class, $manager);
+
+        $defaultDriver = $manager->getDefaultDriver();
+
+        $this->assertIsString($defaultDriver, 'Драйвер по умолчанию может иметь только строкове значение.');
+        $this->assertContains($defaultDriver, [
+            'nullable',
+            'image_code',
+            'google_v3',
+
+        ], 'Драйвер по умолчанию может иметь только одно из значений: `nullable`, `image_code`, `google_v3`.');
     }
 
     /**
