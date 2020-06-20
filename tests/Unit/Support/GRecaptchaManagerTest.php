@@ -38,7 +38,7 @@ class GRecaptchaManagerTest extends TestCase
 
     /**
      * [createManager description]
-     * @param  Container  $container
+     * @param  Container|null  $container
      * @return GRecaptchaManager
      */
     protected function createManager(Container $container = null): GRecaptchaManager
