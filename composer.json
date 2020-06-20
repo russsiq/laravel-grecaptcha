@@ -55,7 +55,7 @@
         "prestissimo": {
             "maxConnections": 10,
             "minConnections": 3,
-			"pipeline": true
+            "pipeline": true
         }
     },
     "minimum-stability": "dev",
