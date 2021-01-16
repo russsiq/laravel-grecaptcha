@@ -3,8 +3,8 @@
 namespace Russsiq\GRecaptcha;
 
 // Зарегистрированные фасады приложения.
-use Blade;
-use Validator;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Validator;
 
 // Сторонние зависимости.
 use Illuminate\Support\ServiceProvider;
