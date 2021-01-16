@@ -37,15 +37,15 @@ abstract class AbstractGRecaptcha implements GRecaptchaContract
     /**
      * Выполнить валидацию капчи.
      * @param  string  $attribute
-     * @param  string|null  $userToken
+     * @param  string  $userToken
      * @param  array  $parameters
      * @param  ValidatorContract  $validator
      * @return bool
      */
     abstract public function validate(
         string $attribute,
-        string $userToken = null,
-        array $parameters = [],
+        string $userToken,
+        array $parameters,
         ValidatorContract $validator
     ): bool;
 

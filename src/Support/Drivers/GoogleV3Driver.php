@@ -233,15 +233,15 @@ class GoogleV3Driver extends AbstractGRecaptcha
     /**
      * Выполнить валидацию капчи (токена), полученого из формы от пользователя.
      * @param  string  $attribute
-     * @param  string|null  $userToken
+     * @param  string  $userToken
      * @param  array  $parameters
      * @param  ValidatorContract  $validator
      * @return bool
      */
     public function validate(
         string $attribute,
-        string $userToken = null,
-        array $parameters = [],
+        string $userToken,
+        array $parameters,
         ValidatorContract $validator
     ): bool {
         // Устанавливаем сообщение по умолчанию об ошибке атрибута.
