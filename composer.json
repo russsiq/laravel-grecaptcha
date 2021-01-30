@@ -44,7 +44,7 @@
         "test": [
             "vendor/bin/phpunit"
         ],
-        "test-win7": [
+        "test-win": [
             "vendor\\bin\\phpunit"
         ],
         "testdox": [
