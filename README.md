@@ -156,10 +156,10 @@ composer remove russsiq/laravel-grecaptcha
 composer run-script test
 ```
 
-Для запуска тестов под Windows 7 используйте команду:
+Для запуска тестов под Windows используйте команду:
 
 ```console
-composer run-script test-win7
+composer run-script test-win
 ```
 
 Для формирования agile-документации, генерируемой в HTML-формате и записываемой в файл [tests/testdox.html](tests/testdox.html), используйте команду:
