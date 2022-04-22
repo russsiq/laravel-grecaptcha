@@ -1,53 +1,30 @@
-## Расширение валидатора Laravel 8.x для проверки Google reCAPTCHA v3
+# Расширение валидатора Laravel 9.x для проверки Google reCAPTCHA v3
 
-Расширение валидатора фреймворка Laravel 8.x для использования Google reCAPTCHA v3. Выполняет запрос к сервису об оценке действий пользователя без его участия для блокирования отправки форм ботами, которые чаще всего спамят.
+Расширение валидатора фреймворка Laravel 9.x для использования Google reCAPTCHA v3. Выполняет запрос к сервису об оценке действий пользователя без его участия для блокирования отправки форм ботами, которые чаще всего спамят.
 
- >Перед использованием пакета зарегистрируйтесь и получите **Ключ** и **Секретный ключ**: [https://g.co/recaptcha/v3](https://g.co/recaptcha/v3).
+> Перед использованием пакета зарегистрируйтесь и получите **Ключ** и **Секретный ключ**: [https://g.co/recaptcha/v3](https://g.co/recaptcha/v3).
 
-Помимо капчи от Google расширение поддерживает пустой драйвер и драйвер капчи, основанный на вводе четырехзначного кода. Выбор выполняется в файле конфигурации расширения **config/g_recaptcha.php**:
+## Подключение
 
-```php
-return [
-  // Драйвер, используемый по умолчанию.
-  // Поддерживаемые типы: `nullable`, `image_code`, `google_v3`.
-  'driver' => env('GRECAPTCHA_DRIVER', 'google_v3'),
+Для добавления зависимости в проект на Laravel, используйте менеджер пакетов Composer:
 
-  // Настройки драйверов.
-  'drivers' => [
-    // ...code
-  ],
-];
+```console
+composer require russsiq/laravel-grecaptcha
 ```
 
-### Подключение
+Если в вашем приложении включен отказ от обнаружения пакетов в директиве `dont-discover` в разделе `extra` файла `composer.json`, то необходимо самостоятельно добавить следующее в файле `config/app.php`:
 
- - **1** Для добавления зависимости в проект на Laravel в файле `composer.json`
+- Провайдер услуг в раздел `providers`:
 
-    ```json
-    "require": {
-        "russsiq/laravel-grecaptcha": "^0.2"
-    }
-    ```
+```php
+Russsiq\GRecaptcha\GRecaptchaServiceProvider::class,
+```
 
- - **2** Для подключения в уже созданный проект воспользуйтесь командной строкой:
+- Псевдоним класса (Facade) в раздел `aliases`:
 
-    ```console
-    composer require "russsiq/laravel-grecaptcha:^0.2"
-    ```
-
- - **3** Если в вашем приложении включен отказ от обнаружения пакетов в директиве `dont-discover` в разделе `extra` файла `composer.json`, то необходимо самостоятельно добавить в файле `config/app.php`:
-
-    - **3.1** Провайдер услуг в раздел `providers`:
-
-        ```php
-        Russsiq\GRecaptcha\GRecaptchaServiceProvider::class,
-        ```
-
-    - **3.2** Псевдоним класса (Facade) в раздел `aliases`:
-
-        ```php
-        'GRecaptcha' => Russsiq\GRecaptcha\Support\Facades\GRecaptcha::class,
-        ```
+```php
+'GRecaptcha' => Russsiq\GRecaptcha\Support\Facades\GRecaptcha::class,
+```
 
 ### Публикация файлов пакета
 
@@ -79,7 +56,22 @@ php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvi
 
 Вставьте **Ключ** и **Секретный ключ** в соответствующие поля в файле `config/g_recaptcha.php` вашего проекта.
 
-### Использование в шаблонах
+Помимо капчи от Google расширение поддерживает пустой драйвер и драйвер капчи, основанный на вводе четырехзначного кода. Выбор выполняется в файле конфигурации расширения `config/g_recaptcha.php`:
+
+```php
+return [
+  // Драйвер, используемый по умолчанию.
+  // Поддерживаемые типы: `nullable`, `image_code`, `google_v3`.
+  'driver' => env('GRECAPTCHA_DRIVER', 'google_v3'),
+
+  // Настройки драйверов.
+  'drivers' => [
+    // ...code
+  ],
+];
+```
+
+## Использование
 
 Добавьте скрытое поле в обрабатываемую форму, используя директиву `@g_recaptcha_input`. Например:
 
@@ -111,7 +103,7 @@ php artisan vendor:publish --provider="Russsiq\GRecaptcha\GRecaptchaServiceProvi
 
 После отправки формы и в случае применения асинхронного запроса (AJAX), для обновления скрытого поля используйте JavaScript функцию `grecaptcha_reload();`.
 
- > Обе директивы не являются обязательным к использованию: вы можете самостоятельно сформировать как скрытое поле, так и логику JavaScript.
+> Обе директивы не являются обязательным к использованию: вы можете самостоятельно сформировать как скрытое поле, так и логику JavaScript.
 
 ### Объявление правил проверки (валидации)
 
@@ -142,13 +134,7 @@ public function rules(): array
 }
 ```
 
-### Удаление пакета из вашего проекта на Laravel
-
-```console
-composer remove russsiq/laravel-grecaptcha
-```
-
-### Тестирование
+## Тестирование
 
 Для запуска тестов используйте команду:
 
@@ -156,18 +142,20 @@ composer remove russsiq/laravel-grecaptcha
 composer run-script test
 ```
 
-Для запуска тестов под Windows используйте команду:
-
-```console
-composer run-script test-win
-```
-
-Для формирования agile-документации, генерируемой в HTML-формате и записываемой в файл [tests/testdox.html](tests/testdox.html), используйте команду:
+Для запуска тестов и формирования agile-документации, генерируемой в HTML-формате и записываемой в файл [tests/testdox.html](tests/testdox.html), используйте команду:
 
 ```console
 composer run-script testdox
 ```
 
+## Удаление пакета
+
+Для удаления пакета из вашего проекта на Laravel используйте команду:
+
+```console
+composer remove russsiq/laravel-zipper
+```
+
 ### Лицензия
 
-`laravel-grecaptcha` - программное обеспечение с открытым исходным кодом, распространяющееся по лицензии [MIT](https://choosealicense.com/licenses/mit/).
+`laravel-grecaptcha` – программное обеспечение с открытым исходным кодом, распространяющееся по лицензии [MIT](LICENSE).
